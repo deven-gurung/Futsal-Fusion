@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Reflection.Emit;
 using FutsalFusion.Domain.Entities;
 using FutsalFusion.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -62,5 +63,17 @@ public sealed class ApplicationDbContext : IdentityDbContext<User, Role, Guid, U
         builder.Entity<UserClaims>().ToTable("UserClaims");
         builder.Entity<UserLogin>().ToTable("LoginAttempts");
         #endregion
+
+        builder.Entity<Appointment>()
+            .HasOne(a => a.User)
+            .WithMany(u => u.Appointments)
+            .HasForeignKey(a => a.BookedUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<AppointmentDetail>()
+            .HasOne(ad => ad.User)
+            .WithMany(u => u.AppointmentDetails)
+            .HasForeignKey(ad => ad.PlayerId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

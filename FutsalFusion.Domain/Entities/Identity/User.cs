@@ -11,4 +11,8 @@ public class User : IdentityUser<Guid>
     public string? State { get; set; }
 
     public string? ImageURL { get; set; }
+
+    public List<Appointment> Appointments { get; set; }
+
+    public List<AppointmentDetail> AppointmentDetails { get; set; }
 }
