@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using FutsalFusion.Application.Interfaces.Identity;
+using FutsalFusion.Application.Interfaces.Services;
 using FutsalFusion.Domain.Entities.Identity;
 using FutsalFusion.Identity.Implementation;
 using FutsalFusion.Infrastructure.Persistence;
@@ -33,6 +34,7 @@ public static class IdentityService
         services.AddAuthentication();
 
         services.AddTransient<IUserIdentityService, UserIdentityService>();
+        services.AddTransient<IEmailService, EmailService>();
         
         return services;
     }

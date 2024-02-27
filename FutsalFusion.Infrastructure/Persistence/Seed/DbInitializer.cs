@@ -14,6 +14,8 @@ public class DbInitializer(ApplicationDbContext dbContext, RoleManager<Role> rol
             if (!roleManager.RoleExistsAsync(Constants.Roles.Admin).GetAwaiter().GetResult())
             {
                 roleManager.CreateAsync(new Role(Constants.Roles.Admin)).GetAwaiter().GetResult();
+                roleManager.CreateAsync(new Role(Constants.Roles.Futsal)).GetAwaiter().GetResult();
+                roleManager.CreateAsync(new Role(Constants.Roles.Player)).GetAwaiter().GetResult();
             }
 
             var superAdminUser = new User
@@ -31,7 +33,8 @@ public class DbInitializer(ApplicationDbContext dbContext, RoleManager<Role> rol
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
-            userManager.CreateAsync(superAdminUser, Constants.Passwords.Password).GetAwaiter().GetResult();
+            userManager.CreateAsync(superAdminUser, Constants.Passwords.AdminPassword).GetAwaiter().GetResult();
+            
             userManager.AddToRoleAsync(superAdminUser, Constants.Roles.Admin).GetAwaiter().GetResult();
             
             await dbContext.SaveChangesAsync();

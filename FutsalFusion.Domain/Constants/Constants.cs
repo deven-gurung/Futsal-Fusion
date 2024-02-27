@@ -11,6 +11,16 @@ public class Constants
 
     public class Passwords
     {
-        public const string Password = "radi0V!oleta";
+        public const string AdminPassword = "radi0V!oleta";
+        public const string FutsalPassword = "radi0V!oleta";
+    }
+    
+    public class FilePath
+    {
+        public static string FutsalImagesFilePath => @"futsal-images\";
+        
+        public static string CourtImagesFilePath => @"court-images\";
+        
+        public static string ProductImagesFilePath => @"product-images\";
     }
 }

@@ -5,6 +5,7 @@ using Mailjet.Client;
 using Mailjet.Client.Resources;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
+
 namespace FutsalFusion.Identity.Implementation;
 
 public class EmailService : IEmailService

@@ -1,5 +1,7 @@
 ﻿using FutsalFusion.Application.Interfaces.Repositories.Base;
+using FutsalFusion.Application.Interfaces.Services;
 using FutsalFusion.Infrastructure.Implementation.Repository.Base;
+using FutsalFusion.Infrastructure.Implementation.Services;
 using FutsalFusion.Infrastructure.Persistence;
 using FutsalFusion.Infrastructure.Persistence.Seed;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +23,8 @@ public static class InfrastructureService
         services.AddScoped<IDbInitializer, DbInitializer>();
 
         services.AddTransient<IGenericRepository, GenericRepository>();
+        services.AddTransient<IFutsalService, FutsalService>();
+        services.AddTransient<IFileUploadService, FileUploadService>();
 
         return services;
     }

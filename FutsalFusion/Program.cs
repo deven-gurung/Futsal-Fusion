@@ -14,6 +14,8 @@ services.AddIdentityService(configuration);
 
 services.AddControllersWithViews();
 
+services.AddRazorPages();
+
 services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(100);
@@ -23,9 +25,9 @@ services.AddSession(options =>
 
 services.ConfigureApplicationCookie(options =>
 {
-    options.LogoutPath = $"/User/Account/Logout";
-    options.LoginPath = $"/User/Account/Login";
-    options.AccessDeniedPath = $"/User/Account/AccessDenied";
+    options.LogoutPath = $"/Account/Logout";
+    options.LoginPath = $"/Account/Login";
+    options.AccessDeniedPath = $"/Account/AccessDenied";
 });
 
 var app = builder.Build();
@@ -52,7 +54,7 @@ app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{area=User}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 using (var scope = app.Services.CreateScope())
 {
