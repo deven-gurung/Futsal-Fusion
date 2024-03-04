@@ -27,14 +27,14 @@ public class ReservationService
             throw new Exception("Sport object doesn't have prices");
         }
 
-        var futureDays = 7;
+        const int futureDays = 7;
         var reservations = sportObject.Reservations
             .Where(r => r.Date >= DateTime.Today && r.Date <= DateTime.Today.AddDays(futureDays))
             .ToList();
 
         var freeTerms = new List<FreeTermDto>();
 
-        for (int i = 0; i <= futureDays; i++)
+        for (var i = 0; i <= futureDays; i++)
         {
             var date = DateTime.Today.AddDays(i);
             var day = (int)date.DayOfWeek == 0 ? 7 : (int)date.DayOfWeek;
@@ -47,7 +47,7 @@ public class ReservationService
                 closeTimeHours = 24;
             }
 
-            for (int j = openTimeHours; j < closeTimeHours; j++)
+            for (var j = openTimeHours; j < closeTimeHours; j++)
             {
                 var startTime = new TimeSpan(j, 0, 0);
                 var endTime = startTime.Add(TimeSpan.FromHours(1));
@@ -57,12 +57,8 @@ public class ReservationService
                     endTime = new TimeSpan(0, 0, 0);
                 }
 
-                var price = sportObject.Prices.SingleOrDefault(p => startTime >= p.TimeFrom && startTime < p.TimeTo && p.TimeTo != maxTimeWorkingHour);
-
-                if (price == null)
-                {
-                    price = sportObject.Prices.SingleOrDefault(p => p.TimeTo == maxTimeWorkingHour);
-                }
+                var price = sportObject.Prices.SingleOrDefault(p => startTime >= p.TimeFrom && startTime < p.TimeTo && p.TimeTo != maxTimeWorkingHour) ??
+                            sportObject.Prices.SingleOrDefault(p => p.TimeTo == maxTimeWorkingHour);
 
                 var freeTerm = new FreeTermDto
                 {
@@ -75,18 +71,15 @@ public class ReservationService
             }
         }
 
-        List<FreeTermDto> output = new List<FreeTermDto>();
+        var output = new List<FreeTermDto>();
 
         foreach (var ft in freeTerms)
         {
             output.Add(ft);
 
-            foreach (var res in reservations)
+            foreach (var res in reservations.Where(res => ft.Date == res.Date && ft.StartTime == res.StartTime))
             {
-                if (ft.Date == res.Date && ft.StartTime == res.StartTime)
-                {
-                    output.Remove(ft);
-                }
+                output.Remove(ft);
             }
         }
 
@@ -97,7 +90,7 @@ public class ReservationService
     {
         var workingHours = sportObject.WorkingHours.ToList();
 
-        if (!workingHours.Any())
+        if (workingHours.Count == 0)
         {
             throw new Exception("Sport object doesn't have working hours");
         }
@@ -111,19 +104,19 @@ public class ReservationService
 
         var prices = sportObject.Prices.ToList();
 
-        if (!prices.Any())
+        if (prices.Count == 0)
         {
             throw new Exception("Sport object doesn't have prices");
         }
 
-        var futureDays = 7;
+        const int futureDays = 7;
         var reservations = sportObject.Reservations
             .Where(r => r.Date >= DateTime.Today && r.Date <= DateTime.Today.AddDays(futureDays))
             .ToList();
 
         var termsByDate = new List<TermByDateDto>();
 
-        for (int i = 0; i <= futureDays; i++)
+        for (var i = 0; i <= futureDays; i++)
         {
             var date = DateTime.Today.AddDays(i);
             var day = (int)date.DayOfWeek == 0 ? 7 : (int)date.DayOfWeek;
@@ -136,10 +129,12 @@ public class ReservationService
                 closeTimeHours = 24;
             }
 
-            var termByDate = new TermByDateDto();
-            termByDate.Date = date;
+            var termByDate = new TermByDateDto
+            {
+                Date = date
+            };
 
-            for (int j = openTimeHours; j < closeTimeHours; j++)
+            for (var j = openTimeHours; j < closeTimeHours; j++)
             {
                 var startTime = new TimeSpan(j, 0, 0);
                 var endTime = startTime.Add(TimeSpan.FromHours(1));
@@ -149,19 +144,14 @@ public class ReservationService
                     endTime = new TimeSpan(0, 0, 0);
                 }
 
-                var price = sportObject.Prices.SingleOrDefault(p => startTime >= p.TimeFrom && startTime < p.TimeTo && p.TimeTo != maxTimeWorkingHour);
-
-                if (price == null)
-                {
-                    price = sportObject.Prices.SingleOrDefault(p => p.TimeTo == maxTimeWorkingHour);
-                }
-
+                var price = sportObject.Prices.SingleOrDefault(p => startTime >= p.TimeFrom && startTime < p.TimeTo && p.TimeTo != maxTimeWorkingHour) ??
+                            sportObject.Prices.SingleOrDefault(p => p.TimeTo == maxTimeWorkingHour);
 
                 var term = new TermDto
                 {
                     StartTime = startTime,
-                    Price = price.PricePerHour,
-                    Status = "free",
+                    Price = price!.PricePerHour,
+                    Status = "Free",
                     IsExpired = false
                 };
 
@@ -194,8 +184,6 @@ public class ReservationService
 
         return termsByDate;
     }
-    
-    
 }
 
 public class TermByDateDto

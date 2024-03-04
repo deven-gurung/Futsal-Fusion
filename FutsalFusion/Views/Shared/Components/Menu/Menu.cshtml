@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<FutsalFusion.Application.DTOs.Menu.MenuDto>
+
+@{
+    var header = Model.Where(x => x.ParentMenuId == null).OrderBy(o => o.SequenceNumber).ToList();
+    
+    foreach (var hd in header)
+    {
+        var menuItem = Model.Where(x => x.ParentMenuId == hd.Id).OrderBy(o => o.SequenceNumber).ToList();
+        
+        if (menuItem.Any())
+        {
+            <li class="side-nav-item nav-link">
+                <a data-bs-toggle="collapse" href="#sidebar_@hd.Id" aria-expanded="false" aria-controls="sidebar_@hd.Id" class="side-nav-link">
+                    <i class="@hd.IconClass"></i>
+                    <span> @hd.Name </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse menu-color" id="sidebar_@hd.Id">
+                    <ul class="side-nav-second-level">
+                        @foreach (var menu in menuItem)
+                        {
+                            var menuItem2 = Model.Where(x => x.ParentMenuId == menu.Id).OrderBy(o => o.SequenceNumber).ToList();
+
+                            if (menuItem2.Any())
+                            {
+                                <li class="side-nav-item">
+                                    <a data-bs-toggle="collapse" href="#sidebar_@menu.Id" aria-expanded="false" aria-controls="sidebar_@menu.Id">
+                                        <span> @menu.Name </span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <div class="collapse menu-color" id="sidebar_@menu.Id">
+                                        <ul class="side-nav-third-level">
+                                            @foreach (var cmenu in menuItem2)
+                                            {
+                                                var cLevel3 = cmenu.URL == "#" ? "" : cmenu.URL.Split(new char[] { '/' })[0];
+                                                var aLevel3 = cmenu.URL == "#" ? "" : cmenu.URL.Split(new char[] { '/' })[1];
+                                                if (cmenu.URL == "#" || cmenu.URL == null)
+                                                {
+                                                    <li><a href="#">@cmenu.Name</a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li><a asp-controller="@cLevel3" asp-action="@aLevel3">@cmenu.Name</a></li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                            else
+                            {
+                                var childControllerName = (menu.URL == "#" || menu.URL == null) ? "" : menu.URL.Split(new char[] { '/' })[0];
+                                var childActionName = (menu.URL == "#" || menu.URL == null) ? "" : menu.URL.Split(new char[] { '/' })[1];
+                                if (menu.URL == "#" || menu.URL == null)
+                                {
+                                    <li><a href="#">@menu.Name</a></li>
+                                }
+                                else
+                                {
+                                    <li> <a asp-controller="@childControllerName" asp-action="@childActionName">@menu.Name</a> </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </li>
+        }
+        else
+        {
+            if (hd.URL != null)
+            {
+                var controllerName = hd.URL is "#" or null ? "" : hd.URL.Split(new char[] { '/' })[0];
+                
+                var actionName = hd.URL is "#" or null ? "" : hd.URL.Split(new char[] { '/' })[1];
+                <li class="side-nav-item">
+                    @if (hd.URL is "#" or null)
+                    {
+                        <a href="#" class="side-nav-link">
+                            <i class="@hd.IconClass"></i>
+                            <span> @hd.Name </span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="@controllerName" asp-action="@actionName" class="side-nav-link">
+                            <i class="@hd.IconClass"></i>
+                            <span> @hd.Name </span>
+                        </a>
+                    }
+                </li>
+            }
+        }
+    }
+}

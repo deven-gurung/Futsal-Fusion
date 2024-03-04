@@ -1,0 +1,99 @@
+﻿@if (TempData["Success"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.css"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.all.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+        let str = '@HtmlEncoder.Encode(TempData["Success"]!.ToString() ?? string.Empty)';
+        str = str.replace(/&amp;lt;/g, "<").replace(/&amp;gt;/g, ">").replace(/&amp;#39;/g, "'");
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            html: '<strong>Message:</strong> ' + str,
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#DD5471',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'swal2-popup',
+                confirmButton: 'swal2-button btn btn-danger mb-3 text-white'
+            }
+        });
+    </script>
+}
+
+@if (TempData["Info"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.css"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.all.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+        let str = '@HtmlEncoder.Encode(TempData["Info"]!.ToString() ?? string.Empty)';
+        str = str.replace(/&amp;lt;/g, "<").replace(/&amp;gt;/g, ">").replace(/&amp;#39;/g, "'");
+        Swal.fire({
+            icon: 'info',
+            title: 'Info',
+            html: '<strong>Message:</strong> ' + str,
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#DD5471',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'swal2-popup',
+                confirmButton: 'swal2-button btn btn-danger mb-3 text-white'
+            }
+        });
+    </script>
+}
+
+@if (TempData["Error"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.css"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.all.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+        let str = '@HtmlEncoder.Encode(TempData["Error"]!.ToString() ?? string.Empty)';
+        str = str.replace(/&amp;lt;/g, "<").replace(/&amp;gt;/g, ">").replace(/&amp;#39;/g, "'");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            html: '<strong>Message:</strong> ' + str,
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#DD5471',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'swal2-popup',
+                confirmButton: 'swal2-button btn btn-danger mb-3 text-white'
+            }
+        });
+    </script>
+}
+
+@if (TempData["Warning"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.css"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.all.js"></script>
+    <script src="~/assets/vendor/sweet-alert/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+        let str = '@HtmlEncoder.Encode(TempData["Warning"]!.ToString() ?? string.Empty)';
+        str = str.replace(/&amp;lt;/g, "<").replace(/&amp;gt;/g, ">").replace(/&amp;#39;/g, "'");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Warning',
+            html: '<strong>Message:</strong> ' + str,
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#DD5471',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'swal2-popup',
+                confirmButton: 'swal2-button btn btn-danger mb-3 text-white'
+            }
+        });
+    </script>
+}

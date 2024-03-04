@@ -9,7 +9,7 @@ public class BaseEntity<TPrimaryKey>
 
     public bool IsActive { get; set; } = true;
 
-    public Guid CreatedBy { get; set; }
+    public Guid CreatedBy { get; set; } = new();
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 

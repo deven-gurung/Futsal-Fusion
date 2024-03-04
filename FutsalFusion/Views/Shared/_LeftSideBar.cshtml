@@ -1,0 +1,25 @@
+﻿<a asp-controller="Home" asp-action="Index" class="logo logo-light menu-color" style="background: #183A4A">
+    <span class="logo-lg">
+        <img src="~/favicon.png" alt="logo">
+    </span>
+    <span class="logo-sm">
+        <img src="~/favicon.png" alt="small logo" height="50">
+    </span>
+</a>
+
+<div class="button-sm-hover" data-bs-toggle="tooltip" data-bs-placement="right" title="Show Full Sidebar">
+    <i class="ri-checkbox-blank-circle-line align-middle"></i>
+</div>
+
+<div class="button-close-fullsidebar">
+    <i class="ri-close-fill align-middle"></i>
+</div>
+
+<div class="h-100" id="leftside-menu-container" data-simplebar>
+    <div class="leftbar-user">
+    </div>
+    <ul class="side-nav">
+        <li class="side-nav-title">ICDS Patna</li>
+        @await Component.InvokeAsync("Menu")
+    </ul>
+</div>
