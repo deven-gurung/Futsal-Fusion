@@ -9,6 +9,11 @@ public class MenuService : IMenuService
 {
     private readonly IGenericRepository _genericRepository;
 
+    public MenuService(IGenericRepository genericRepository)
+    {
+        _genericRepository = genericRepository;
+    }
+
     public List<MenuDto> GetMenuByRole(Guid roleId)
     {
         var roleRights = _genericRepository.Get<RoleRights>(x => 

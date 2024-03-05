@@ -5,12 +5,12 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
-    var userDetail = HttpContextAccessor?.HttpContext!.Session.GetComplexData<UserDetailDto>("User");
+    // var userDetail = HttpContextAccessor?.HttpContext!.Session.GetComplexData<UserDetailDto>("User");
 }
 
-@if (userDetail != null)
+@if (true)
 {
-    var image = userDetail.ImageName ?? "sample-profile.png";
+    var image = "sample-profile.png";
 
     <div class="topbar container-fluid">
         <div class="d-flex align-items-center gap-lg-2 gap-1">
@@ -229,8 +229,8 @@
                         <img src="~/assets/images/users/@image" alt="user-image" width="42" height="42" class="rounded-circle">
                     </span>
                     <span class="d-lg-flex flex-column gap-1 d-none">
-                        <h5 class="my-0">@userDetail.FullName</h5>
-                        <h6 class="my-0 fw-normal">@userDetail.RoleName</h6>
+                        <h5 class="my-0">Super Admin</h5>
+                        <h6 class="my-0 fw-normal">Administrator</h6>
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">

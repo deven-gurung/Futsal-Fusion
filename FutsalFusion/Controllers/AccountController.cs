@@ -18,14 +18,19 @@ public class AccountController : Controller
         _userIdentityService = userIdentityService;
         _emailSender = emailSender;
     }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Login()
+    {
+        return View();
+    }
     
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> Register(string? returnUrl = null)
+    public IActionResult Register()
     {
-        ViewData["ReturnUrl"] = returnUrl;
-
-        return await Task.FromResult<IActionResult>(View());
+        return View();
     }
     
     [HttpPost]
@@ -78,15 +83,6 @@ public class AccountController : Controller
         var user = await _userIdentityService.ConfirmEmail(userId, code);
 
         return View(user ? "ConfirmEmail" : "Error");
-    }
-    
-    [HttpGet]
-    [AllowAnonymous]
-    public IActionResult Login(string? returnUrl = null)
-    {
-        ViewData["ReturnUrl"] = returnUrl;
-        
-        return View();
     }
     
     [HttpPost]

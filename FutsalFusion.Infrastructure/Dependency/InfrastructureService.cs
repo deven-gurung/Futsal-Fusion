@@ -23,8 +23,9 @@ public static class InfrastructureService
         services.AddScoped<IDbInitializer, DbInitializer>();
 
         services.AddTransient<IGenericRepository, GenericRepository>();
-        services.AddTransient<IFutsalService, FutsalService>();
         services.AddTransient<IFileUploadService, FileUploadService>();
+        services.AddTransient<IFutsalService, FutsalService>();
+        services.AddTransient<IMenuService, MenuService>();
 
         return services;
     }

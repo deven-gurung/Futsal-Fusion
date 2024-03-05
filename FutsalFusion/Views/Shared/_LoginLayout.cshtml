@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Fusion</title>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
+    <script src="~/assets/js/hyper-config.js"></script>
+    
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    
+    <link href="~/assets/css/app-modern.min.css" rel="stylesheet" type="text/css" id="app-style" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico">
+</head>
+<body class="login-main">
+    <partial name="_Notification"/>
+    @RenderBody()
+    
+    <script src="~/assets/js/vendor.min.js"></script>
+    <script src="~/assets/js/app.min.js"></script>
+    
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

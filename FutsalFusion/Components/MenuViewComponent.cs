@@ -14,11 +14,13 @@ public class MenuViewComponent: ViewComponent
         _menuService = menuService;
     }
     
-    public IViewComponentResult InvokeAsync()
+    public async Task<IViewComponentResult> InvokeAsync()
     {
-        var userDetail = HttpContext.Session.GetComplexData<UserDetailDto>("User");
+        // var userDetail = HttpContext.Session.GetComplexData<UserDetailDto>("User");
 
-        var userMenu = _menuService.GetMenuByRole(userDetail.RoleId);
+        var roleId = "95205A34-05E0-46DB-BAA6-B1BCAEA10D63";
+        
+        var userMenu = _menuService.GetMenuByRole(new Guid(roleId));
 
         return View("Menu", userMenu);
     }
