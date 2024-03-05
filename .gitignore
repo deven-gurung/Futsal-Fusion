@@ -268,10 +268,3 @@ mono*.blob
 <<<<<<< HEAD
 .ci/preview.sh
 .ci
-
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.bmp
-*.svg
