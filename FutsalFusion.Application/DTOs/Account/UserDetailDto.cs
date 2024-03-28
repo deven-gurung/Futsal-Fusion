@@ -13,4 +13,6 @@ public class UserDetailDto
     public string? ImageName { get; set; }
 
     public string RoleName { get; set; }
+    
+    public List<UserAccessDetailDto> UserAccessDetails { get; set; }
 }

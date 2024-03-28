@@ -1,28 +1,73 @@
 ﻿using System.Text.Encodings.Web;
+using FutsalFusion.Application.DTOs.Account;
 using FutsalFusion.Application.DTOs.Email;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using FutsalFusion.Application.DTOs.Identity;
 using FutsalFusion.Application.Interfaces.Identity;
+using FutsalFusion.Application.Interfaces.Repositories.Base;
 using FutsalFusion.Application.Interfaces.Services;
+using FutsalFusion.Attribute;
+using FutsalFusion.Domain.Entities;
+using FutsalFusion.Domain.Utilities;
 
 namespace FutsalFusion.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly IUserIdentityService _userIdentityService;
     private readonly IEmailService _emailSender;
+    private readonly IGenericRepository _genericRepository;
+    private readonly IUserIdentityService _userIdentityService;
 
-    public AccountController(IUserIdentityService userIdentityService, IEmailService emailSender)
+    public AccountController(IUserIdentityService userIdentityService, IEmailService emailSender, IGenericRepository genericRepository)
     {
         _userIdentityService = userIdentityService;
         _emailSender = emailSender;
+        _genericRepository = genericRepository;
     }
 
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Login()
     {
+        return View();
+    }
+    
+    [HttpPost]
+    [AllowAnonymous]
+    public IActionResult Login(LoginRequestDto login)
+    {
+        var user = _genericRepository.GetFirstOrDefault<AppUser>(x => x.UserName == login.Username);
+
+        login.Username = Password.DecryptStringAES(login.HiddenUsername);
+        login.Password = Password.DecryptStringAES(login.HiddenPassword);
+
+        if (user != null)
+        {
+            var isValid = Password.VerifyPassword(login.Password, user.Password, Password.PasswordSalt);
+
+            if (isValid)
+            {
+                var role = _genericRepository.GetById<AppRole>(user.RoleId);
+
+                var userDetail = new UserDetailDto()
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    FullName = user.FullName,
+                    ImageName = user.ImageURL,
+                    RoleId = user.RoleId,
+                    RoleName = role.Name,
+                };
+                
+                HttpContext.Session.SetComplexData("User", userDetail);
+                
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        TempData["Warning"] = "Invalid username or password";
+        
         return View();
     }
     
@@ -85,25 +130,25 @@ public class AccountController : Controller
         return View(user ? "ConfirmEmail" : "Error");
     }
     
-    [HttpPost]
-    [AllowAnonymous]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginDto login, string? returnUrl = null)
-    {
-        ViewData["ReturnUrl"] = returnUrl;
-        
-        returnUrl = returnUrl ?? Url.Content("~/");
-
-        var result = await _userIdentityService.Login(login, returnUrl);
-
-        return result switch
-        {
-            "Locked" => View("Locked"),
-            "Invalid" => View("Invalid"),
-            "Success" => View(),
-            _ => View("Error")
-        };
-    }
+    // [HttpPost]
+    // [AllowAnonymous]
+    // [ValidateAntiForgeryToken]
+    // public async Task<IActionResult> Login(LoginDto login, string? returnUrl = null)
+    // {
+    //     ViewData["ReturnUrl"] = returnUrl;
+    //     
+    //     returnUrl = returnUrl ?? Url.Content("~/");
+    //
+    //     var result = await _userIdentityService.Login(login, returnUrl);
+    //
+    //     return result switch
+    //     {
+    //         "Locked" => View("Locked"),
+    //         "Invalid" => View("Invalid"),
+    //         "Success" => View(),
+    //         _ => View("Error")
+    //     };
+    // }
     
     [HttpPost]
     [ValidateAntiForgeryToken]

@@ -14,7 +14,9 @@ public class Appointment : BaseEntity<Guid>
     
     public DateTime AppointedDate { get; set; }
     
-    public string TimeSlot { get; set; }
+    public TimeSpan TimeSlotStartTime { get; set; }
+
+    public TimeSpan TimeSlotEndTime { get; set; }
 
     public bool IsApproved { get; set; } = false;
 
@@ -29,7 +31,7 @@ public class Appointment : BaseEntity<Guid>
     public string? FinalScore { get; set; }
     
     [ForeignKey("BookedUserId")]
-    public virtual User User { get; set; }
+    public virtual AppUser User { get; set; }
 
     [ForeignKey("BookedCourtId")]
     public virtual Court Court { get; set; }

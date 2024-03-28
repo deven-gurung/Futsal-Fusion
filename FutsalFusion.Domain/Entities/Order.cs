@@ -1,4 +1,5 @@
-﻿using FutsalFusion.Domain.Base;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using FutsalFusion.Domain.Base;
 
 namespace FutsalFusion.Domain.Entities;
 
@@ -25,4 +26,7 @@ public class Order : BaseEntity<Guid>
     public string? SessionId { get; set; }
     
     public string? PaymentIntendId { get; set; }
+    
+    [ForeignKey("UserId")]
+    public virtual AppUser User { get; set; }
 }

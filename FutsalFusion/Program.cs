@@ -56,11 +56,11 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-//
-//     dbInitializer.Initialize();
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+
+    dbInitializer.Initialize();
+}
 
 app.Run();

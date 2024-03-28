@@ -10,7 +10,7 @@ public class RoleRights : BaseEntity<Guid>
     public Guid MenuId { get; set; }
     
     [ForeignKey("RoleId")]
-    public virtual Role Role { get; set; }
+    public virtual AppRole Role { get; set; }
 
     [ForeignKey("MenuId")]
     public virtual Menu Menu { get; set; }

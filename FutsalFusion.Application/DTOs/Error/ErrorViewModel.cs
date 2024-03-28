@@ -1,4 +1,4 @@
-namespace FutsalFusion.Models;
+namespace FutsalFusion.Application.DTOs.Error;
 
 public class ErrorViewModel
 {

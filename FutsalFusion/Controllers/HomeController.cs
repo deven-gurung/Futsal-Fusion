@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using FutsalFusion.Models;
+using FutsalFusion.Application.DTOs.Error;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FutsalFusion.Controllers;

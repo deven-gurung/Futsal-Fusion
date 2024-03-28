@@ -19,5 +19,5 @@ public class Futsal : BaseEntity<Guid>
     public Guid FutsalOwnerId { get; set; }
     
     [ForeignKey("FutsalOwnerId")]
-    public virtual User User { get; set; }
+    public virtual AppUser User { get; set; }
 }

@@ -20,5 +20,9 @@ public class AppUser : BaseEntity<Guid>
     public string? ImageURL { get; set; }
     
     [ForeignKey("RoleId")]
-    public virtual Role Role { get; set; }
+    public virtual AppRole Role { get; set; }
+    
+    public List<Appointment> Appointments { get; set; }
+
+    public List<AppointmentDetail> AppointmentDetails { get; set; }
 }

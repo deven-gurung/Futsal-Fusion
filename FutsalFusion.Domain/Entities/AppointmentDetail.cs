@@ -10,7 +10,7 @@ public class AppointmentDetail : BaseEntity<Guid>
     
     public Guid PlayerId { get; set; }
     
-    public string PlayerStatus { get; set; }
+    public string PlayerStatus { get; set; }            // Self or Missing Void Player
     
     public string PlayerTeam { get; set; }
     
@@ -18,5 +18,5 @@ public class AppointmentDetail : BaseEntity<Guid>
     public virtual Appointment Appointment { get; set; }
     
     [ForeignKey("PlayerId")]
-    public virtual User User { get; set; }
+    public virtual AppUser User { get; set; }
 }

@@ -16,8 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FutsalFusion.Identity\FutsalFusion.Identity.csproj" />
-      <ProjectReference Include="..\FutsalFusion.Infrastructure\FutsalFusion.Infrastructure.csproj" />
+        <ProjectReference Include="..\FutsalFusion.Identity\FutsalFusion.Identity.csproj" />
+        <ProjectReference Include="..\FutsalFusion.Infrastructure\FutsalFusion.Infrastructure.csproj" />
+        <PackageReference Include="Vereyon.Web.HtmlSanitizer" Version="1.8.0" />
+        
     </ItemGroup>
 
     <ItemGroup>

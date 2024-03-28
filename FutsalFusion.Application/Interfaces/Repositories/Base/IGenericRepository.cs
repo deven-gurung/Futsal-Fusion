@@ -25,7 +25,7 @@ public interface IGenericRepository
     #region Get Item
     TEntity GetById<TEntity>(object id) where TEntity : class;
 
-    TEntity GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter) where TEntity : class;
+    TEntity? GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> filter) where TEntity : class;
     #endregion
 
     #region Data Insertion

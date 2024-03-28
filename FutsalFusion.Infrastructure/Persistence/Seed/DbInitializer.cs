@@ -1,43 +1,54 @@
-﻿using FutsalFusion.Domain.Constants;
-using FutsalFusion.Domain.Entities.Identity;
-using Microsoft.AspNetCore.Identity;
+﻿using FutsalFusion.Application.Interfaces.Repositories.Base;
+using FutsalFusion.Domain.Constants;
+using FutsalFusion.Domain.Entities;
+using FutsalFusion.Domain.Utilities;
 
 namespace FutsalFusion.Infrastructure.Persistence.Seed;
 
-public class DbInitializer(ApplicationDbContext dbContext, RoleManager<Role> roleManager, UserManager<User> userManager)
+public class DbInitializer(IGenericRepository genericRepository)
     : IDbInitializer
 {
-    public async Task Initialize()
+    public void Initialize()
     {
         try
         {
-            if (!roleManager.RoleExistsAsync(Constants.Roles.Admin).GetAwaiter().GetResult())
+            if (!genericRepository.Get<AppRole>().Any())
             {
-                roleManager.CreateAsync(new Role(Constants.Roles.Admin)).GetAwaiter().GetResult();
-                roleManager.CreateAsync(new Role(Constants.Roles.Futsal)).GetAwaiter().GetResult();
-                roleManager.CreateAsync(new Role(Constants.Roles.Player)).GetAwaiter().GetResult();
+                var admin = new AppRole()
+                {
+                    Name = Constants.Roles.Admin
+                };
+                var futsalOwner = new AppRole()
+                {
+                    Name = Constants.Roles.Futsal
+                };
+                var player = new AppRole()
+                {
+                    Name = Constants.Roles.Player
+                };
+
+                genericRepository.Insert(admin);
+                genericRepository.Insert(futsalOwner);
+                genericRepository.Insert(player);
             }
 
-            var superAdminUser = new User
+            if (genericRepository.Get<AppUser>().Any()) return;
+            
+            var adminRole = genericRepository.GetFirstOrDefault<AppRole>(x => x.Name == Constants.Roles.Admin);
+                
+            var superAdminUser = new AppUser
             {
-                Name = "Super Admin",
-                Email = "superadmin@superadmin.com",
-                NormalizedEmail = "superadmin@superadmin.com".ToUpper(),
+                FullName = "Super Admin",
+                EmailAddress = "superadmin@superadmin.com",
                 UserName = "superadmin@superadmin.com",
-                NormalizedUserName = "superadmin@superadmin.com".ToUpper(),
-                Address = "Harold Street",
-                State = "State Somewhere",
-                PhoneNumber = "9800000000",
-                EmailConfirmed = true,
-                PhoneNumberConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString("D")
+                Password = Password.CreatePasswordHash(Constants.Passwords.AdminPassword, Password.CreateSalt(Password.PasswordSalt)),
+                RoleId = adminRole.Id,
+                CreatedAt = DateTime.Now,
+                MobileNo = "+977 9803364638",
+                ImageURL = null
             };
 
-            userManager.CreateAsync(superAdminUser, Constants.Passwords.AdminPassword).GetAwaiter().GetResult();
-            
-            userManager.AddToRoleAsync(superAdminUser, Constants.Roles.Admin).GetAwaiter().GetResult();
-            
-            await dbContext.SaveChangesAsync();
+            genericRepository.Insert(superAdminUser);
         }
         catch (Exception e)
         {
