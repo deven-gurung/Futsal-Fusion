@@ -1,13 +1,12 @@
 ﻿using FutsalFusion.Application.DTOs.Account;
-using FutsalFusion.Attribute;
 using FutsalFusion.Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ICDS.Attribute;
+namespace FutsalFusion.Attribute;
 
-public class AuthorizeAttribute : ActionFilterAttribute, IActionFilter
+public class AuthorizeAttribute : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext filterContext)
     {
@@ -20,8 +19,17 @@ public class AuthorizeAttribute : ActionFilterAttribute, IActionFilter
             actionName = controllerActionDescriptor.ActionName.ToLower();
         }
         
-        var user = filterContext.HttpContext.Session.GetComplexData<UserDetailDto>("User");
+        var user = filterContext.HttpContext.Session.GetComplexData<UserDetailDto?>("User");
 
+        if (user == null)
+        {
+            filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { action = "UnauthorizedAccess", controller = "Handler" }));
+
+            base.OnActionExecuting(filterContext);
+            
+            return;
+        }
+        
         var indexPageUrl = $"{controllerName}/index";
 
         if (SharedControllers.Controllers.Contains(controllerName)) return;

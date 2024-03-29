@@ -29,4 +29,6 @@ public class Order : BaseEntity<Guid>
     
     [ForeignKey("UserId")]
     public virtual AppUser User { get; set; }
+    
+    public virtual List<OrderDetail> OrderDetails { get; set; }
 }

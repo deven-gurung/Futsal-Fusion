@@ -8,6 +8,7 @@ using FutsalFusion.Application.Interfaces.Identity;
 using FutsalFusion.Application.Interfaces.Repositories.Base;
 using FutsalFusion.Application.Interfaces.Services;
 using FutsalFusion.Attribute;
+using FutsalFusion.Domain.Constants;
 using FutsalFusion.Domain.Entities;
 using FutsalFusion.Domain.Utilities;
 
@@ -17,13 +18,15 @@ public class AccountController : Controller
 {
     private readonly IEmailService _emailSender;
     private readonly IGenericRepository _genericRepository;
+    private readonly IFileUploadService _fileUploadService;
     private readonly IUserIdentityService _userIdentityService;
 
-    public AccountController(IUserIdentityService userIdentityService, IEmailService emailSender, IGenericRepository genericRepository)
+    public AccountController(IUserIdentityService userIdentityService, IEmailService emailSender, IGenericRepository genericRepository, IFileUploadService fileUploadService)
     {
         _userIdentityService = userIdentityService;
         _emailSender = emailSender;
         _genericRepository = genericRepository;
+        _fileUploadService = fileUploadService;
     }
 
     [HttpGet]
@@ -37,10 +40,10 @@ public class AccountController : Controller
     [AllowAnonymous]
     public IActionResult Login(LoginRequestDto login)
     {
-        var user = _genericRepository.GetFirstOrDefault<AppUser>(x => x.UserName == login.Username);
-
         login.Username = Password.DecryptStringAES(login.HiddenUsername);
-        login.Password = Password.DecryptStringAES(login.HiddenPassword);
+        login.Password = Password.DecryptStringAES(login.HiddenPassword).Replace(login.HiddenChangePassword, "");
+        
+        var user = _genericRepository.GetFirstOrDefault<AppUser>(x => x.UserName == login.Username);
 
         if (user != null)
         {
@@ -50,6 +53,30 @@ public class AccountController : Controller
             {
                 var role = _genericRepository.GetById<AppRole>(user.RoleId);
 
+                var roleRights = _genericRepository.Get<RoleRights>(x => x.RoleId == role.Id);
+
+                var menus = _genericRepository.Get<Menu>(x => roleRights.Select(y => y.MenuId).Contains(x.Id));
+
+                var userAccessDetails = from menu in menus
+                    join roleRight in roleRights
+                        on menu.Id equals roleRight.MenuId
+                    select new UserAccessDetailDto()
+                    {
+                        RoleId = role.Id,
+                        UserId = user.Id,
+                        ShowMenu = true,
+                        MenuId = menu.Id,
+                        MenuDetail = new MenuDetailDto()
+                        {
+                            MenuId = menu.Id,
+                            ParentMenuId = menu.ParentMenuId,
+                            IconClass = menu.IconClass,
+                            MenuName = menu.Name,
+                            SequenceNo = menu.SequenceNo,
+                            URL = menu.URL
+                        }
+                    };
+                
                 var userDetail = new UserDetailDto()
                 {
                     UserId = user.Id,
@@ -58,6 +85,7 @@ public class AccountController : Controller
                     ImageName = user.ImageURL,
                     RoleId = user.RoleId,
                     RoleName = role.Name,
+                    UserAccessDetails = userAccessDetails.ToList()
                 };
                 
                 HttpContext.Session.SetComplexData("User", userDetail);
@@ -68,7 +96,15 @@ public class AccountController : Controller
 
         TempData["Warning"] = "Invalid username or password";
         
-        return View();
+        return View(new LoginRequestDto());
+    }
+    
+    [HttpGet]
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        
+        return RedirectToAction("Login");
     }
     
     [HttpGet]
@@ -81,37 +117,40 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(RegisterDto register, string? returnUrl = null)
+    public IActionResult Register(RegisterRequestDto register)
     {
-        ViewData["ReturnUrl"] = returnUrl;
+        register.Username = Password.DecryptStringAES(register.HiddenUsername);
+        register.Password = Password.DecryptStringAES(register.HiddenPassword).Replace(register.HiddenChangePassword, "");
         
-        returnUrl = returnUrl ?? Url.Content("~/");
-        
-        if (ModelState.IsValid)
+        var user = _genericRepository.GetFirstOrDefault<AppUser>(x => x.UserName == register.Username && x.EmailAddress == register.EmailAddress);
+
+        if (user == null)
         {
-            var user = await _userIdentityService.Register(register);
-            
-            var callbackUrl = Url.Action("ConfirmEmail", "Account", new
-            {
-                userId = user.Item1, 
-                code = user.Item2
-            }, protocol: HttpContext.Request.Scheme);
+            var imageUrl = register.Image != null ? _fileUploadService.UploadDocument(Constants.FilePath.UsersImagesFilePath, register.Image) : null;
 
-            var emailOption = new EmailActionDto()
+            var player = _genericRepository.GetFirstOrDefault<AppRole>(x => x.Name == Constants.Roles.Player);
+            
+            var appUser = new AppUser
             {
-                Email = register.Email,
-                Subject = "Email Confirmation",
-                Body = $"<a href='{HtmlEncoder.Default.Encode(callbackUrl ?? "")}'>"
+                FullName = register.FullName,
+                EmailAddress = register.EmailAddress,
+                UserName = register.Username,
+                Password = Password.CreatePasswordHash(register.Password, Password.CreateSalt(Password.PasswordSalt)),
+                RoleId = player!.Id,
+                CreatedAt = DateTime.Now,
+                ImageURL = imageUrl
             };
+
+            _genericRepository.Insert(appUser);
+
+            TempData["Success"] = "You have been successfully registered to our system.";
             
-            await _emailSender.SendEmail(emailOption);
-
-            TempData["Success"] = "Email Successfully Sent";
-
-            return RedirectToAction("RegisterConfirmation");
+            return RedirectToAction("Login");
         }
         
-        return View();
+        TempData["Warning"] = "A user with the following username or email address has already been registered, please try with a new username.";
+        
+        return View(new RegisterRequestDto());
     }
     
     [HttpGet]

@@ -1,4 +1,6 @@
-﻿namespace FutsalFusion.Domain.Constants;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FutsalFusion.Domain.Constants;
 
 public enum Roles
 {
@@ -9,6 +11,6 @@ public enum Roles
 
 public enum CourtType
 {
-    Indoor = 1,
-    Outdoor = 2
+    [Display(Name="Indoor")] Indoor = 1,
+    [Display(Name="Outdoor")] Outdoor = 2
 }

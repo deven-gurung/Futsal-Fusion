@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FutsalFusion.Controllers.Base;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FutsalFusion.Controllers;
 
-public class ProductController : Controller
+public class ProductController : BaseController<ProductController>
 {
     public IActionResult Index()
     {

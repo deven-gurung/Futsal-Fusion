@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
 
-namespace ICDS.Middlewares;
+namespace FutsalFusion.Middlewares;
 
 public class SecurityHeadersMiddleware
 {

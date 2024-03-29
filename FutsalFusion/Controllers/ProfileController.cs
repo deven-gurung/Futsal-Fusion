@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FutsalFusion.Controllers.Base;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FutsalFusion.Controllers;
 
-public class ProfileController : Controller
+public class ProfileController : BaseController<ProfileController>
 {
     public IActionResult Index()
     {

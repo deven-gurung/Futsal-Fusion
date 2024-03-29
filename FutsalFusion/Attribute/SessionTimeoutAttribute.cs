@@ -1,10 +1,9 @@
-﻿using FutsalFusion.Attribute;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ICDS.Attribute;
+namespace FutsalFusion.Attribute;
 
-public class SessionTimeoutAttribute : ActionFilterAttribute, IActionFilter
+public class SessionTimeoutAttribute : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext filterContext)
     {
@@ -22,6 +21,5 @@ public class SessionTimeoutAttribute : ActionFilterAttribute, IActionFilter
             
             base.OnActionExecuting(filterContext);
         }
-
     }
 }

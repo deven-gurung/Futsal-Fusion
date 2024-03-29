@@ -6,7 +6,7 @@ public class MenuDetailDto
 
     public string MenuName { get; set; }
 
-    public int? ParentMenuId { get; set; }
+    public Guid? ParentMenuId { get; set; }
 
     public int? SequenceNo { get; set; }
 

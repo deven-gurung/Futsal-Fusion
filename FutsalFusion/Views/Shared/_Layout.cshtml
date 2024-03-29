@@ -47,11 +47,20 @@
     
     <!-- Bootstrap Datepicker JS -->
     <script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        
+    <!-- jQuery Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     
+    <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="~/assets/vendor/daterangepicker/moment.min.js"></script>  
 </head>
 <body>
 
 <partial name="_Notification"/>
+<partial name="_LoadingPanel"/>
 
 <div class="wrapper">
     <!-- ========== Top Login Information Bar Start ========== -->
@@ -68,7 +77,9 @@
 
     <!-- ========== Start Content Here ========== -->
     <!-- ========== View Content Start ========== -->
-    @RenderBody()
+    <div data-simplebar>
+        @RenderBody()
+    </div>
     <!-- ========== View Content End ========== -->
     <!-- ========== End Page Content ========== -->
 
@@ -92,14 +103,11 @@
     <!-- ========== Footer End ========== -->
 </div>
 
-<!-- jQuery Scripts -->
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
 <!-- Vendor JS -->
 <script src="~/assets/js/vendor.min.js"></script>
+
+<!-- Bootstrap Datepicker Plugin js -->
+<script src="~/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 
 <!-- Select2 JS  -->
 <script src="~/assets/vendor/select2/js/select2.min.js"></script>
@@ -121,7 +129,12 @@
 <script src="~/assets/vendor/sweet-alert/sweetalert2.all.js"></script>
 <script src="~/assets/vendor/sweet-alert/sweetalert2.all.min.js"></script>
 
+<script src="~/assets/vendor/dropzone/min/dropzone.min.js"></script>
+<script src="~/assets/js/ui/component.fileupload.js"></script>
+<script src="~/assets/vendor/chart.js/chart.min.js"></script>
+
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/ajax.js" asp-append-version="true"></script>
 
 @await RenderSectionAsync("Scripts", required: false)
 

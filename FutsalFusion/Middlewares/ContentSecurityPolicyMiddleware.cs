@@ -1,4 +1,4 @@
-﻿namespace ICDS.Middlewares;
+﻿namespace FutsalFusion.Middlewares;
 
 public class ContentSecurityPolicyMiddleware
 {

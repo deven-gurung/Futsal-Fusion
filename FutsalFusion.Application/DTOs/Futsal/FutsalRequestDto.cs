@@ -1,18 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace FutsalFusion.Application.DTOs.Futsal;
 
 public class FutsalRequestDto
 {
     public Guid Id { get; set; } = Guid.Empty;
-    
-    public string OwnerName { get; set; }
-
-    public string OwnerEmail { get; set; }
-
-    public string? OwnerAddress { get; set; }
-
-    public string? OwnerState { get; set; }
     
     public string FutsalName { get; set; }
     
@@ -24,11 +17,25 @@ public class FutsalRequestDto
     
     public string FutsalCity { get; set; }
     
-    public List<IFormFile> Images { get; set; }
+    [Display(Name = "Futsal Owner Name")]
+    public string OwnerName { get; set; }
+
+    [Display(Name = "Futsal Owner Phone Number")]
+    public string OwnerPhoneNumber { get; set; }
+
+    public IFormFile? OwnerProfileImage { get; set; }
+
+    [Display(Name = "Futsal Owner Username")]
+    public string OwnerUsername { get; set; }
+
+    [Display(Name = "Futsal Owner Email Address")]
+    public string OwnerEmail { get; set; }
+
+    public string? OwnerAddress { get; set; }
+
+    public string? OwnerState { get; set; }
     
-    public List<CourtRequestDto> Courts { get; set; }
-    
-    public Guid CreatedBy { get; set; }
+    public List<CourtRequestDto>?Courts { get; set; }
 }
 
 public class CourtRequestDto

@@ -9,4 +9,6 @@ public class LoginRequestDto
     public string HiddenUsername { get; set; }
     
     public string HiddenPassword { get; set; }
+ 
+    public string HiddenChangePassword { get; set; }
 }

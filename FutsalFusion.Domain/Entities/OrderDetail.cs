@@ -13,7 +13,7 @@ public class OrderDetail : BaseEntity<Guid>
     
     public decimal KitTotalAmount { get; set; }
     
-    [ForeignKey("Kit")]
+    [ForeignKey("KitId")]
     public virtual Kit Kit { get; set; }
     
     [ForeignKey("OrderId")]

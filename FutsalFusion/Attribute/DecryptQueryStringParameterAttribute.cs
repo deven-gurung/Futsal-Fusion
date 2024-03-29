@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ICDS.Attribute;
+namespace FutsalFusion.Attribute;
 
 public class DecryptQueryStringParameterAttribute: ActionFilterAttribute
 {

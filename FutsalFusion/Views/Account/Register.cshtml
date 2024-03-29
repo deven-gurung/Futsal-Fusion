@@ -1,6 +1,9 @@
-﻿@{
+﻿@model FutsalFusion.Application.DTOs.Account.RegisterRequestDto
+
+@{
     Layout = "_LoginLayout";
     ViewData["Title"] = "Register";
+    var username = "@";
 }
 
 <div class="authentication-bg">
@@ -18,59 +21,151 @@
     <div class="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5 position-relative">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-xxl-4 col-lg-5">
+                <div class="col-xxl-8 col-lg-6"> <!-- Updated classes to col-6 -->
                     <div class="card">
-                        <div class="card-header py-4 text-center bg-primary">
+                        <div class="card-header py-4 text-center bg-dark">
                         </div>
-
                         <div class="card-body p-4">
                             <div class="text-center w-75 m-auto">
                                 <h4 class="text-dark-50 text-center mt-0 fw-bold">Free Sign Up</h4>
                                 <p class="text-muted mb-4">Don't have an account? Create your account, it takes less than a minute </p>
                             </div>
-
-                            <form action="#">
-                                <div class="mb-3">
-                                    <label for="fullname" class="form-label">Full Name</label>
-                                    <input class="form-control" type="text" id="fullname" placeholder="Enter your name" required>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="emailaddress" class="form-label">Email address</label>
-                                    <input class="form-control" type="email" id="emailaddress" required placeholder="Enter your email">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="password" class="form-label">Password</label>
-                                    <div class="input-group input-group-merge">
-                                        <input type="password" id="password" class="form-control" placeholder="Enter your password">
-                                        <div class="input-group-text" data-password="false">
-                                            <span class="password-eye"></span>
+                            <form method="post" asp-controller="Account" asp-action="Register" autocomplete="off" enctype="multipart/form-data" class="needs-validation" novalidate>
+                                @Html.AntiForgeryToken()
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Full Name</label>
+                                            <input asp-for="FullName" class="form-control" type="text" placeholder="Enter your full name" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email Address</label>
+                                            <input asp-for="EmailAddress" class="form-control" type="email" required placeholder="Enter your email address">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Password</label>
+                                            <div class="input-group input-group-merge">
+                                                <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required>
+                                                <div class="input-group-text" data-password="false">
+                                                    <span class="password-eye"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="checkbox-signup" required>
+                                                <label class="form-check-label" for="checkbox-signup">I accept <a href="#" class="text-muted">Terms and Conditions</a></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Username</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text" > @username </span>
+                                                <input asp-for="Username" type="text" class="form-control" placeholder="Enter your username" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="mb-0">Avatar</label>
+                                            <p class="text-muted font-14">Recommended thumbnail size 800x400 (px).</p>
+                                            <div class="dropzome" id="file-dropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
+                                                <div class="fallback">
+                                                    <input asp-for="Image" name="file" type="file" />
+                                                </div>
+                                                <div class="dz-message needsclick mt-2">
+                                                    <i class="h3 text-muted ri-upload-cloud-2-line"></i>
+                                                    <h4>Drop files here or click to upload.</h4>
+                                                </div>
+                                            </div>
+                                            <div class="dropzone-previews mt-3" id="file-previews"></div>
+                                            <div class="d-none" id="uploadPreviewTemplate">
+                                                <div class="card mt-1 mb-0 shadow-none border">
+                                                    <div class="p-2">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-auto">
+                                                                <img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">
+                                                            </div>
+                                                            <div class="col ps-0">
+                                                                <a href="javascript:void(0);" class="text-muted fw-bold" data-dz-name></a>
+                                                                <p class="mb-0" data-dz-size></p>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <!-- Button -->
+                                                                <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                                                                    <i class="ri-close-line"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="checkbox-signup">
-                                        <label class="form-check-label" for="checkbox-signup">I accept <a href="#" class="text-muted">Terms and Conditions</a></label>
-                                    </div>
+                                <div class="row">
+                                    <input asp-for="HiddenUsername" class="form-control" type="hidden"/>
+                                    <input asp-for="HiddenPassword" class="form-control" type="hidden"/>
+                                    <input asp-for="HiddenChangePassword" class="form-control" type="hidden"/>
                                 </div>
-
                                 <div class="mb-3 text-center">
-                                    <button class="btn btn-primary" type="submit"> Sign Up </button>
+                                    <button class="btn btn-dark" type="submit" id="sign-up"> Sign Up </button>
                                 </div>
                             </form>
-                        </div> 
+                        </div>
                     </div>
-
+    
                     <div class="row mt-3">
                         <div class="col-12 text-center">
                             <p class="text-muted">Already have account? <a asp-action="Login" class="text-muted ms-1"><b>Log In</b></a></p>
-                        </div> 
+                        </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        let loginButton = document.getElementById('sign-up');
+        loginButton.addEventListener('click', function (event) {
+            let txtUserName = $('#Username').val();
+            let txtPassword = $('#Password').val();
+
+            let salt = Date.now().toString(36) + Math.random().toString(36).substr(2);
+            
+            $('#HiddenChangePassword').val(salt);
+
+            if (txtUserName === '' || txtPassword === '') {
+                return;
+            }
+
+            let key = CryptoJS.enc.Utf8.parse('8080808080808080');
+            let iv = CryptoJS.enc.Utf8.parse('8080808080808080');
+
+            let encryptedLogin = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtUserName), key,
+                {
+                    keySize: 128 / 8,
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+
+            $('#HiddenUsername').val(encryptedLogin);
+            $('#Username').val("********************");
+
+            let encryptedPassword = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtPassword + salt), key,
+                {
+                    keySize: 128 / 8,
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+
+            $('#HiddenPassword').val(encryptedPassword);
+            $('#Password').val("********************");
+        });
+        
+    });
+</script>

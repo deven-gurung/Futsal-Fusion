@@ -1,4 +1,10 @@
-﻿<div class="content-page">
+﻿@model List<FutsalFusion.Application.DTOs.Futsal.FutsalGridResponseDto>
+
+@{
+    ViewData["Title"] = "Futsal Overview";
+}
+
+<div class="content-page">
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -10,20 +16,25 @@
                                 <li class="breadcrumb-item active">Futsals</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Dashboard</h4>
+                        <h4 class="page-title">Futsal Overview</h4>
                     </div>
                 </div>
             </div>
 
             <div class="row mb-2">
+                <div class="col-sm-4">
+                    <a asp-action="Register" class="btn btn-danger rounded-pill mb-3">
+                        <i class="mdi mdi-plus"></i> Futsal Registration
+                    </a>
+                </div>
                 <div class="col-sm-8">
                     <div class="text-sm-end">
                         <div class="btn-group mb-3">
                             <button type="button" class="btn btn-primary">All</button>
                         </div>
                         <div class="btn-group mb-3 ms-1">
-                            <button type="button" class="btn btn-light">Ongoing</button>
-                            <button type="button" class="btn btn-light">Finished</button>
+                            <button type="button" class="btn btn-light">Exotic</button>
+                            <button type="button" class="btn btn-light">Popular</button>
                         </div>
                         <div class="btn-group mb-3 ms-2 d-none d-sm-inline-block">
                             <button type="button" class="btn btn-secondary"><i class="ri-function-line"></i></button>
@@ -32,17 +43,18 @@
                             <button type="button" class="btn btn-link text-muted"><i class="ri-list-check-2"></i></button>
                         </div>
                     </div>
-                </div>
-            </div> 
+                </div><!-- end col-->
+            </div>
             <div class="row">
                 <div class="col-md-6 col-xxl-3">
                     <div class="card d-block">
                         <img class="card-img-top" src="~/assets/images/projects/project-1.jpg" alt="project image cap">
                         <div class="card-img-overlay">
-                            <div class="badge bg-secondary text-light p-1">Exotic</div>
+                            <div class="badge bg-secondary text-light p-1">New</div>
                         </div>
                         <div class="card-body position-relative">
                             <h4 class="mt-0">
+                                
                                 <a class="text-title">Futsal Aromatics</a>
                             </h4>
 
@@ -61,6 +73,55 @@
                         </div> 
                     </div> 
                 </div> 
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-6 col-xxl-3">
+                        <div class="card d-block">
+                            <img class="card-img-top" src="~/futsal-images/@item.ImageUrl" alt="project image cap">
+                            <div class="card-img-overlay">
+                                <div class="row">
+                                    <div class="col-6">
+                                        @if (item.IsExotic)
+                                        {
+                                            <div class="badge bg-secondary text-light p-1">Exotic</div>
+                                        }
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        @if (item.IsNew)
+                                       {
+                                           <div class="badge bg-success text-light p-1">New</div>
+                                       }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body position-relative">
+                                <h4 class="mt-0">
+                                    <a asp-action="FutsalDetails" asp-route-futsalId="@item.FutsalId" class="text-title">
+                                        @item.FutsalName
+                                    </a>
+                                </h4>
+                                <p class="mb-3">
+                                    <span class="pe-2 text-nowrap">
+                                        <i class="mdi mdi-format-list-bulleted-type"></i>
+                                        <b>@item.CurrentAppointments</b> Current Appointments
+                                    </span>
+                                    <span class="text-nowrap">
+                                        <i class="mdi mdi-comment-multiple-outline"></i>
+                                        <b>@item.TotalBookings</b> Total Bookings
+                                    </span>
+                                </p>
+                                <p class="text-muted font-13 my-3">
+                                    @item.Slogan
+                                </p>    
+                                <div id="tooltip-container">
+                                    <a asp-controller="FutsalOwner" asp-action="Index" data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="top" title="@item.OwnerName" class="d-inline-block">
+                                        <img src="~/user-images/@item.OwnerImageUrl" class="rounded-circle avatar-xs" alt="friend">
+                                    </a>
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                }
             </div>
         </div> 
     </div>

@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using FutsalFusion.Application.DTOs.Account;
 using FutsalFusion.Attribute;
-using ICDS.Attribute;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 namespace FutsalFusion.Controllers.Base;
 
 [Authorize]
-[SessionTimeout]
 [DecryptQueryStringParameter]
 public class BaseController<T> : Controller where T : BaseController<T>
 {

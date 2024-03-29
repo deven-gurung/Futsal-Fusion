@@ -1,10 +1,11 @@
 using System.Diagnostics;
 using FutsalFusion.Application.DTOs.Error;
+using FutsalFusion.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FutsalFusion.Controllers;
 
-public class HomeController(ILogger<HomeController> logger) : Controller
+public class HomeController(ILogger<HomeController> logger) : BaseController<HomeController>
 {
     public IActionResult Index()
     {

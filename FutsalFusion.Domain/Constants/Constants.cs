@@ -22,5 +22,7 @@ public class Constants
         public static string CourtImagesFilePath => @"court-images\";
         
         public static string ProductImagesFilePath => @"product-images\";
+
+        public static string UsersImagesFilePath => @"user-images\";
     }
 }

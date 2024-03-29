@@ -5,75 +5,67 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="authentication-bg">
-    <div class="position-absolute start-0 end-0 start-0 bottom-0 w-100 h-100">
-        <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' viewBox='0 0 800 800'>
-            <g fill-opacity='0.22'>
-                <circle style="fill: rgba(var(--ct-primary-rgb), 0.1);" cx='400' cy='400' r='600'/>
-                <circle style="fill: rgba(var(--ct-primary-rgb), 0.2);" cx='400' cy='400' r='500'/>
-                <circle style="fill: rgba(var(--ct-primary-rgb), 0.3);" cx='400' cy='400' r='300'/>
-                <circle style="fill: rgba(var(--ct-primary-rgb), 0.4);" cx='400' cy='400' r='200'/>
-                <circle style="fill: rgba(var(--ct-primary-rgb), 0.5);" cx='400' cy='400' r='100'/>
-            </g>
-        </svg>
-    </div>
-    <div class="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5 position-relative">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xxl-4 col-lg-5">
-                    <div class="card">
-                        <div class="card-header py-4 text-center bg-primary">
-                            <span><img src="~/assets/images/futsal.jpg" alt="logo" height="22"></span>
-                        </div>
-                        <form method="post" asp-controller="Account" asp-action="Login" autocomplete="off" class="needs-validation" novalidate>
-                            @Html.AntiForgeryToken()
-                            <div class="card-body p-4">
-                                <div class="text-center w-75 m-auto">
-                                    <h4 class="text-dark-50 text-center pb-0 fw-bold">Sign In</h4>
-                                    <p class="text-muted mb-4">Enter your email address and password to access admin panel.</p>
-                                </div>
-                                <div class="mb-3">
-                                    <label asp-for="Username" class="form-label"></label>
-                                    <input asp-for="Username" class="form-control" required placeholder="Enter your email">
-                                </div>
-                                <div class="mb-3">
-                                    <a asp-action="ForgetPassword" class="text-muted float-end"><small>Forgot your password?</small></a>
-                                    <label asp-for="Password" class="form-label"></label>
-                                    <div class="input-group input-group-merge">
-                                        <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password">
-                                        <div class="input-group-text" data-password="false">
-                                            <span class="password-eye"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 mb-3">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="checkbox-signin" checked>
-                                        <label class="form-check-label" for="checkbox-signin">Remember me</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3 mb-0 text-center">
-                                    <button type="submit" class="btn btn-primary" id="login">
-                                        <i class="ri-login-box-line"></i>Login
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="row"> 
-                                <input asp-for="HiddenUsername" class="form-control" type="hidden"/>
-                                <input asp-for="HiddenPassword" class="form-control" type="hidden"/>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-12 text-center">
-                            <p class="text-muted">Don't have an account? <a asp-action="Register" class="text-muted ms-1"><b>Sign Up</b></a></p>
-                        </div>
-                    </div>
+<body class="authentication-bg pb-0">
+    <div class="auth-fluid">
+        <div class="auth-fluid-form-box">
+            <div class="card-body d-flex flex-column h-100">
+                <div class="auth-brand text-center text-lg-start p-0 m-0">
+                    <span><img src="~/assets/images/futsal-fusion.png" alt="logo" height="100"></span>
                 </div>
-            </div>
+                <div class="my-auto">
+                    <h4 class="mt-0">Sign In</h4>
+                    <p class="text-muted mb-4">Enter your email address and password to access account.</p>
+                    <form method="post" asp-controller="Account" asp-action="Login" autocomplete="off" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label asp-for="Username" class="form-label"></label>
+                            <input asp-for="Username" class="form-control" required placeholder="Enter your username">
+                        </div>
+                        <div class="mb-3">
+                            <a asp-action="ForgetPassword" class="text-muted float-end"><small>Forgot your password?</small></a>
+                            <label asp-for="Password" class="form-label"></label>
+                            <div class="input-group input-group-merge">
+                                <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required>
+                                <div class="input-group-text" data-password="false">
+                                    <span class="password-eye"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="checkbox-signin">
+                                <label class="form-check-label" for="checkbox-signin">Remember me</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <input asp-for="HiddenUsername" class="form-control" type="hidden"/>
+                            <input asp-for="HiddenPassword" class="form-control" type="hidden"/>
+                            <input asp-for="HiddenChangePassword" class="form-control" type="hidden"/>
+                        </div>
+                        <div class="d-grid mb-0 text-center">
+                            <button type="submit" class="btn btn-dark" id="login">
+                                Login
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <footer class="footer footer-alt">
+                    <p class="text-muted">Don't have an account? <a asp-action="Register" class="text-muted ms-1"><b>Sign Up</b></a></p>
+                </footer>
+            </div> 
+        </div>
+        <div class="auth-fluid-right text-center">
+            <div class="auth-user-testimonial">
+                <h2 class="mb-3">I love the color, vibrancy!</h2>
+                <p class="lead"><i class="mdi mdi-format-quote-open"></i> It's a elegent place to schedule. I love it very much! . <i class="mdi mdi-format-quote-close"></i>
+                </p>
+                <p>
+                    - Futsal Fusion User
+                </p>
+            </div> 
         </div>
     </div>
-</div>
+</body>
 
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
@@ -83,6 +75,8 @@
             let txtPassword = $('#Password').val();
 
             let salt = Date.now().toString(36) + Math.random().toString(36).substr(2);
+            
+            $('#HiddenChangePassword').val(salt);
 
             if (txtUserName === '' || txtPassword === '') {
                 return;
@@ -113,5 +107,6 @@
             $('#HiddenPassword').val(encryptedPassword);
             $('#Password').val("********************");
         });
+        
     });
 </script>

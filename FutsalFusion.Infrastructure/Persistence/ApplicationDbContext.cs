@@ -82,7 +82,25 @@ public sealed class ApplicationDbContext : DbContext
             .WithMany(u => u.Appointments)
             .HasForeignKey(a => a.BookedUserId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.Entity<Notification>()
+            .HasOne(n => n.Sender)
+            .WithMany()
+            .HasForeignKey(n => n.SenderId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.Entity<Notification>()
+            .HasOne(n => n.Receiver)
+            .WithMany()
+            .HasForeignKey(n => n.SenderId)
+            .OnDelete(DeleteBehavior.Restrict);
 
+        builder.Entity<OrderDetail>()
+            .HasOne(od => od.Order)
+            .WithMany(o => o.OrderDetails)
+            .HasForeignKey(od => od.OrderId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
         builder.Entity<AppointmentDetail>()
             .HasOne(ad => ad.User)
             .WithMany(u => u.AppointmentDetails)
