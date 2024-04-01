@@ -33,6 +33,8 @@ public class FutsalResponseDto
     public List<CourtResponseDto> Courts { get; set; }
     
     public List<FutsalWorkingHours> WorkingHours { get; set; }
+
+    public List<FutsalWorkingHoursRequestDto> FutsalWorkingHours { get; set; }
 }
 
 public class CourtResponseDto

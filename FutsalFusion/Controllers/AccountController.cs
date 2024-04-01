@@ -1,9 +1,11 @@
-﻿using System.Text.Encodings.Web;
+﻿using System.Data;
+using System.Text.Encodings.Web;
 using FutsalFusion.Application.DTOs.Account;
 using FutsalFusion.Application.DTOs.Email;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using FutsalFusion.Application.DTOs.Identity;
+using FutsalFusion.Application.DTOs.User;
 using FutsalFusion.Application.Interfaces.Identity;
 using FutsalFusion.Application.Interfaces.Repositories.Base;
 using FutsalFusion.Application.Interfaces.Services;
@@ -11,22 +13,28 @@ using FutsalFusion.Attribute;
 using FutsalFusion.Domain.Constants;
 using FutsalFusion.Domain.Entities;
 using FutsalFusion.Domain.Utilities;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Data.SqlClient;
 
 namespace FutsalFusion.Controllers;
 
 public class AccountController : Controller
 {
     private readonly IEmailService _emailSender;
+    private readonly IConfiguration _configuration;
     private readonly IGenericRepository _genericRepository;
     private readonly IFileUploadService _fileUploadService;
     private readonly IUserIdentityService _userIdentityService;
 
-    public AccountController(IUserIdentityService userIdentityService, IEmailService emailSender, IGenericRepository genericRepository, IFileUploadService fileUploadService)
+    public AccountController(IUserIdentityService userIdentityService, IEmailService emailSender, IGenericRepository genericRepository, IFileUploadService fileUploadService, IConfiguration configuration)
     {
         _userIdentityService = userIdentityService;
         _emailSender = emailSender;
         _genericRepository = genericRepository;
         _fileUploadService = fileUploadService;
+        _configuration = configuration;
     }
 
     [HttpGet]
@@ -119,6 +127,7 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Register(RegisterRequestDto register)
     {
+        register.Image = HttpContext.Request.Form.Files.FirstOrDefault();
         register.Username = Password.DecryptStringAES(register.HiddenUsername);
         register.Password = Password.DecryptStringAES(register.HiddenPassword).Replace(register.HiddenChangePassword, "");
         
@@ -278,5 +287,168 @@ public class AccountController : Controller
     public IActionResult ResetPasswordConfirmation()
     {
         return View();
+    }
+
+    [HttpGet]
+    public IActionResult UsersList()
+    {
+        var users = _genericRepository.Get<AppUser>();
+
+        var result = users.Select(x => new UserResponseDto()
+        {
+            Id = x.Id,
+            FullName = x.FullName,
+            Username = x.UserName,
+            ImageURL = x.ImageURL ?? "sample-profile.png",
+            EmailAddress = x.EmailAddress,
+            RoleName = _genericRepository.GetById<AppRole>(x.RoleId).Name,
+            RegisteredDate = x.CreatedAt.ToString("dd-MM-yyyy")
+        }).ToList();
+
+        return View(result);
+    }
+
+    [HttpGet]
+    public IActionResult RoleRights()
+    {
+        var roles = _genericRepository.Get<AppRole>();
+        
+        var roleList = roles.Select(role => new SelectListItem()
+        {
+            Text = role.Name,
+            Value = role.Id.ToString()
+        }).ToList();
+
+        ViewBag.ddlRoles = roleList;
+
+        return View();
+    }
+
+    [HttpGet]
+    public IActionResult GetRoleRights(Guid roleId)
+    {
+        var menus = _genericRepository.Get<Menu>(x => x.IsActive);
+
+        var roleRights = _genericRepository.Get<RoleRights>(x => x.RoleId == roleId);
+
+        var result = from m in menus
+            join ur in roleRights
+                on m.Id equals ur.MenuId into role
+            from r in role.DefaultIfEmpty()
+            orderby m.Name
+            select new AccessRights()
+            {
+                MenuId = m.Id,
+                ParentMenuId = m.ParentMenuId,
+                MenuName = m.Name,
+                RoleId = r?.RoleId ?? new Guid(),
+                URL = m.URL,
+            };
+        
+        var roleDetails = result.Select(l => new RoleRightsRequestDto()
+        {
+            MenuId = l.MenuId,
+            ParentMenuId = l.ParentMenuId,  
+            MenuName = l.MenuName,
+            RoleId = l.RoleId,
+            URL = l.URL 
+        }).ToList();
+
+        ViewBag.roleDetails = roleDetails;
+
+        var htmlData = ConvertViewToString("_RoleRights", roleDetails, true);
+        
+        return Json(new
+        {
+            htmlData = htmlData
+        });
+    }
+    
+    [HttpPost]
+    public IActionResult InsertRoleRights(Guid roleId, string menuIds)
+    {
+        var dtRoleRights = new DataTable();
+        
+        dtRoleRights.Columns.Add("RoleId", typeof(Guid));
+        dtRoleRights.Columns.Add("MenuId", typeof(Guid));
+        dtRoleRights.Columns.Add("CreatedBy", typeof(Guid));
+
+        var arrMenuId = menuIds.Split(',');
+
+        foreach (var menuId in arrMenuId)
+        {
+            var row = dtRoleRights.NewRow();
+            row["RoleId"] = Convert.ToString(roleId);
+            row["MenuId"] = Convert.ToString(menuId);
+            row["CreatedBy"] = Convert.ToString("D1F1441C-E26A-4E89-81EE-08DC4ECE4B31");
+            dtRoleRights.Rows.Add(row);
+        }
+        
+        var dbConnection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+        using (dbConnection)
+        {
+            var dbSqlCommand = new SqlCommand();
+            
+            dbSqlCommand.Connection = dbConnection;
+            
+            dbSqlCommand.CommandType = CommandType.StoredProcedure;
+            
+            dbSqlCommand.CommandText = "InsertRoleRights";
+
+            var paramAttendanceDt = dbSqlCommand.Parameters.AddWithValue("@dtRoleRights", dtRoleRights);
+            
+            paramAttendanceDt.SqlDbType = SqlDbType.Structured;
+            
+            paramAttendanceDt.TypeName = "udtRoleRights";
+
+            if (dbConnection.State == ConnectionState.Closed) dbConnection.Open();
+            
+            dbSqlCommand.ExecuteNonQuery();
+            
+            dbConnection.Close();
+        }
+        
+        return Json(new 
+        {
+            success = 1,
+            message = "Menu Rights and Privileges successfully assigned."
+        });
+    }
+    
+    private string ConvertViewToString<TModel>(string viewName, TModel model, bool partial = false)
+    {
+        if (string.IsNullOrEmpty(viewName))
+        {
+            viewName = ControllerContext.ActionDescriptor.ActionName;
+        }
+
+        ViewData.Model = model;
+
+        using var writer = new StringWriter();
+        
+        var viewEngine = HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
+        
+        var viewResult = viewEngine?.FindView(this.ControllerContext, viewName, !partial);
+
+        if (viewResult is { Success: false })
+        {
+            return $"A view with the name {viewName} could not be found";
+        }
+
+        if (viewResult?.View == null) return writer.ToString();
+        
+        var viewContext = new ViewContext(
+            ControllerContext,
+            viewResult.View,
+            ViewData,
+            TempData,
+            writer,
+            new HtmlHelperOptions()
+        );
+
+        viewResult.View.RenderAsync(viewContext);
+
+        return writer.ToString();
     }
 }

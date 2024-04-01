@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Role Rights";
+}
+
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Fusion</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">User Account</a></li>
+                                <li class="breadcrumb-item active">Roles Index</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Role Rights List</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card filter-section">
+                    <div class="card-body">
+                        <form data-ajax="true" data-ajax-method="GET" asp-action="GetRoleRights" asp-controller="Account" class="needs-validation" novalidate data-ajax-success="onSuccess">
+                            <div class="row gy-2 gx-2 align-items-center">
+                                <div class="col-lg-2 col-md-4 col-sm-4 col-form-label">
+                                    <i class="mdi mdi-filter text-dark"></i> <label class="text-dark">Filter By :</label>
+                                </div>
+                                <label class="col-lg-2 col-md-4 col-sm-4 col-form-label required">Role</label>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    <select name="roleId" id="roleId" asp-items="@ViewBag.ddlRoles" aria-required="true" class="form-select" required>
+                                        <option disabled="" label="Select role name" selected="" value=""></option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-4 col-md-12 col-sm-12 text-end">
+                                    <button type="submit" value="Search" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here, to get role right" class="btn btn-info btn-sm rounded-pill">
+                                        <span class="mdi mdi-magnify search-icon"></span> Search
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="div-role-rights" class="row"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function onSuccess(data){
+        $("#div-role-rights").html(data.htmlData);
+    }
+</script>

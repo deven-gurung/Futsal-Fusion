@@ -1,0 +1,117 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model FutsalFusion.Application.DTOs.Futsal.CourtDetailsRequestDto
+
+@{
+    ViewData["Title"] = "Court Prices";
+}
+
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Fusion</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Court Overview</a></li>
+                                <li class="breadcrumb-item active">Prices</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Court Prices</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6">
+                    <form asp-controller="Futsal" asp-action="CourtPrices" method="post">
+                        <input asp-for="CourtId" type="hidden" class="form-control"/>
+                        <div class="card">
+                            <div class="card-body mb-0 pb-0">
+                                <h4 class="mt-0 mb-3">Court Prices</h4>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Price Per Hour</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for (var i = 0; i < Model.CourtPrices.Count; i++)
+                                    {
+                                        <tr>
+                                            @{
+                                                var index = i;
+                                            }
+                                            <td>
+                                                <input asp-for="@Model.CourtPrices[index].PricePerHour" class="form-control" type="text"/>
+                                            </td>
+                                            <td>
+                                                <select asp-for="@Model.CourtPrices[index].StartTime" asp-items="@ViewBag.ddlStartTime" class="form-control">
+                                                    <option value="">Select a Start Time</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select asp-for="@Model.CourtPrices[index].EndTime" asp-items="@ViewBag.ddlEndTime" class="form-control">
+                                                    <option value="">Select an End Time</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer text-end">
+                                <a type="button" asp-action="CourtPrices" asp-route-courtId="@Model.CourtId" class="btn btn-light">Back to Details</a>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div> 
+                <div class="col-xxl-6 col-lg-6">
+                    <div class="card d-block">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="row">
+                                    <h3 class="mt-0">@Model.CourtName</h3>
+                                    <h5 class="mt-2">@Model.FutsalName</h5>
+                                </div>
+                                <div class="row">
+                                    <h5>@Model.CourtDescription</h5>
+                                    <h6>
+                                        <p class="fst-italic">@Model.Address</p>
+                                    </h6>
+                                </div>
+                                <div class="dropdown">
+                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ri-more-fill"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-pencil me-1"></i>Edit</a>
+                                        <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-delete me-1"></i>Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-4">
+                                        <div id="tooltip-container">
+                                            <h5>Futsal Personnel</h5>
+                                            <a href="javascript:void(0);" data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="top" title="@Model.OwnerName" class="d-inline-block">
+                                                <img src="~/user-images/@Model.OwnerImage" class="rounded-circle img-thumbnail avatar-sm" alt="friend">
+                                            </a>
+                                            <h5>@Model.EmailAddress</h5>
+                                            <h5>@Model.PhoneNumber</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,7 +1,7 @@
-﻿@model FutsalFusion.Application.DTOs.Futsal.FutsalResponseDto
+﻿@model FutsalFusion.Application.DTOs.Futsal.CourtDetailsResponseDto
 
 @{
-    ViewData["Title"] = "Futsal Overview";
+    ViewData["Title"] = "Court Overview";
 }
 
 <div class="content-page">
@@ -14,10 +14,10 @@
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Fusion</a></li>
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Overview</a></li>
-                                <li class="breadcrumb-item active">Futsal Details</li>
+                                <li class="breadcrumb-item active">Court Details</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Futsal Details</h4>
+                        <h4 class="page-title">Court Details</h4>
                     </div>
                 </div>
             </div>
@@ -27,9 +27,9 @@
                         <div class="card-body">
                             <div class="slideshow-container">
                                 <div class="container justify-content-center d-flex">
-                                    @foreach (var item in Model.FutsalImages)
+                                    @foreach (var item in Model.CourtImageURL)
                                     {
-                                        <img style="width:500px;height:270px; object-fit:cover; margin-right: 5px;" asp-append-version="true" src="~/futsal-images/@item" alt="">
+                                        <img style="width:500px;height:270px; object-fit:cover; margin-right: 5px;" asp-append-version="true" src="~/court-images/@item" alt="">
                                     }
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                     <div class="card d-block">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h3 class="mt-0">@Model.FutsalName</h3>
+                                <h3 class="mt-0">@Model.CourtName</h3>
                                 <div class="dropdown">
                                     <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="ri-more-fill"></i>
@@ -49,55 +49,18 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (Model.IsExotic)
-                            {
-                                <div class="badge bg-secondary text-light mb-3">Exotic</div>
-                            }
-                            @if (Model.IsNew)
-                            {
-                                <div class="badge bg-primary text-light mb-3">New</div>
-                            }
-                            @if (Model.IsPopular)
-                            {
-                                <div class="badge bg-danger text-light mb-3">Popular</div>
-                            }
-
-                            <h5>@Model.FutsalPhrase</h5>
+                            <h5 class="fw-bolder">@Model.FutsalName</h5>
                             <h6>
-                                <p class="fst-italic">@Model.FutsalLocationAddress</p>
+                                <p class="fst-italic">@Model.Address</p>
                             </h6>
                             <p class="text-muted mb-2">
-                                @Html.Raw(Model.FutsalOverview)
+                                @Html.Raw(Model.CourtDescription)
                             </p>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-4">
-                                        <h5>Initiated Date Date</h5>
-                                        <p>@Model.InitiatedDate</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-4">
-                                        <h5>Total Earnings</h5>
-                                        <p>Rs @Model.TotalEarnings</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-4">
-                                        <div id="tooltip-container">
-                                            <h5>Meet the Personnel</h5>
-                                            <a href="javascript:void(0);" data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="top" title="@Model.OwnerName" class="d-inline-block">
-                                                <img src="~/user-images/@Model.OwnerImageUrl" class="rounded-circle img-thumbnail avatar-sm" alt="friend">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mt-0 mb-3">Comments (5)</h4>
+                            <h4 class="mt-0 mb-3">Find an Appointment</h4>
                             <textarea class="form-control form-control-light mb-2" placeholder="Write message" id="example-textarea" rows="3"></textarea>
                             <div class="text-end">
                                 <div class="btn-group mb-2">
@@ -132,38 +95,12 @@
                 <div class="col-lg-6 col-xxl-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title mb-3">Appointment Progress</h5>
+                            <h5 class="card-title mb-3">Weekly Appointments</h5>
                             <div dir="ltr">
                                 <div dir="ltr">
-                                    <div id="appointment-details" class="apex-charts" data-colors="#727cf5,#6c757d"></div>
+                                    <div id="appointment-details" class="apex-charts" data-colors="#fa6767"></div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">Courts</h5>
-                            @foreach (var court in Model.Courts)
-                            {
-                                <div class="card mb-1 shadow-none border">
-                                    <div class="p-2">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <img src="~/court-images/@court.Images.FirstOrDefault()" class="avatar-sm rounded" alt="file-image" />
-                                            </div>
-                                            <div class="col ps-0">
-                                                <a href="javascript:void(0);" class="text-muted fw-bold">@court.Title</a>, <span class="text-title">@court.Type</span>
-                                                <p class="mb-0">@court.Description</p>
-                                            </div>
-                                            <div class="col-auto">
-                                                <a asp-action="CourtDetails" asp-route-futsalCourtId="@court.Id" class="btn btn-link btn-lg text-muted">
-                                                    <i class="ri-download-2-line"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
                         </div>
                     </div>
                     <div class="card">
@@ -172,13 +109,37 @@
                                 <div class="col mt-2">
                                     <h5 class="card-title mb-3">Working Days</h5>
                                 </div>
+                            </div>
+                            <partial name="_WorkingHours" model="Model.WorkingHours"/>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <h5 class="card-title mt-2">Prices</h5>
+                                </div>
                                 <div class="col text-end">
-                                    <a type="button" class="btn btn-outline-info" id="working-hours" asp-action="FutsalWorkingHours" asp-route-futsalId="@Model.FutsalId">
+                                    <a type="button" class="btn btn-outline-info" id="working-hours" asp-action="CourtPrices" asp-route-courtId="@Model.CourtId">
                                         <i class="uil-circuit"></i> Information
                                     </a>
                                 </div>
                             </div>
-                            <partial name="_WorkingHours" model="Model.WorkingHours"/>
+                            @foreach (var price in Model.CourtPrices)
+                            {
+                                <div class="card mb-1 shadow-none border">
+                                    <div class="p-2">
+                                        <div class="row align-items-center">
+                                            <div class="col-auto ps-3">
+                                                <p class="mb-0">@price.TimePeriod</p>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="javascript:void(0);" class="text-title ">@price.Price</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -188,67 +149,64 @@
 </div>
 
 <script type="text/javascript">
+    let colors = ["#fa6767"];
+    let dataColors = $("#appointment-details").data("colors");
     let options = {
         chart: {
             height: 380,
-            type: "area"
+            type: "area",
+            zoom: {
+                enabled: false
+            }
         },
         dataLabels: {
             enabled: false
         },
         stroke: {
             width: 3,
-            curve: "smooth"
+            curve: "straight"
         },
-        colors: ["#727cf5"], 
+        colors: dataColors ? dataColors.split(",") : colors,
         series: [{
-            name: "Bookings",
-            data: ['110', '200', '150', '195']
+            name: "Weekly Appointments",
+            data: [5, 4, 3, 5, 7, 7, 5] // Use numbers instead of strings
         }],
-        legend: {
-            offsetY: 5
+        title: {
+            text: "Last Week's Analysis",
+            align: "left"
+        },
+        subtitle: {
+            text: "Hourly Bookings",
+            align: "left"
         },
         xaxis: {
-            categories: ['Mon', 'Tue', 'Wed', 'Thu'],
-            title: {
-                text: 'Days' 
-            }
+            type: "category",
+            categories: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00']
         },
         yaxis: {
-            title: {
-                text: 'Bookings'
-            }
+            opposite: true
         },
-        tooltip: {
-            fixed: {
-                enabled: false,
-                position: "topRight"
-            }
+        legend: {
+            horizontalAlign: "left"
         },
         grid: {
             borderColor: "#f1f3fa"
-        }
+        },
+        responsive: [{
+            breakpoint: 600,
+            options: {
+                chart: {
+                    toolbar: {
+                        show: false
+                    }
+                },
+                legend: {
+                    show: false
+                }
+            }
+        }]
     };
-
-    let appointments = new ApexCharts(document.querySelector("#appointment-details"), options);
-    appointments.render();
     
-    $(document).ready(function() {
-        $("#submit-comment").click(function() {
-            var commentText = $("#example-textarea").val();
-
-            var newComment = `
-                <div class="d-flex align-items-start mt-2">
-                    <img class="me-3 avatar-sm rounded-circle" src="/user-images/super-admin.jpg" alt="Generic placeholder image">
-                    <div class="w-100 overflow-hidden">
-                        <h5 class="mt-0">User</h5>
-                        ${commentText}
-                    </div>
-                </div>
-            `;
-
-            $(".comments-section").append(newComment);
-            $("#example-textarea").val(""); // Clear the textarea
-        });
-    });
+    let chart = new ApexCharts(document.querySelector("#appointment-details"), options);
+    chart.render();
 </script>

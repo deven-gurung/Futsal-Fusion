@@ -1,0 +1,96 @@
+﻿@model List<FutsalFusion.Application.DTOs.User.UserResponseDto>
+
+@{
+    ViewData["Title"] = "Users List";
+}
+
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Fusion</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Users List</a></li>
+                                <li class="breadcrumb-item active">User Index</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Users List</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="table-responsive">
+                                <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th class="all" style="width: 20px;">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="customCheck1">
+                                                <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                                            </div>
+                                        </th>
+                                        <th class="all">User</th>
+                                        <th>Username</th>
+                                        <th>Email Address</th>
+                                        <th>Role</th>
+                                        <th>Joined Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="customCheck2">
+                                                    <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <img class="me-3 avatar-sm rounded-circle" src="/user-images/@item.ImageURL" alt="image">
+                                                <p class="m-0 d-inline-block align-middle font-16">
+                                                    <a href="#" class="text-body">@item.FullName</a>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                @item.Username
+                                            </td>
+                                            <td>
+                                                @item.EmailAddress
+                                            </td>
+                                            <td>
+                                                @switch (item.RoleName)
+                                                {
+                                                    case "Admin":
+                                                        <span class="badge bg-danger">Admin</span>
+                                                        break;
+                                                    case "Player":
+                                                        <span class="badge bg-success">Player</span>
+                                                        break;
+                                                    case "Futsal":
+                                                        <span class="badge bg-warning">Futsal</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>
+                                                @item.RegisteredDate
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

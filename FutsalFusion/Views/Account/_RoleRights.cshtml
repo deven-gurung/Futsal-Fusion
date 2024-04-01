@@ -1,0 +1,131 @@
+﻿@using FutsalFusion.Application.DTOs.User
+@model List<FutsalFusion.Application.DTOs.User.RoleRightsRequestDto>
+
+<div class="card">
+    <div class="card-body">
+        <div class="col-12 mb-3" style="height: 310px; overflow: auto">
+            @{
+                List<RoleRightsRequestDto> parentMenu = ViewBag.roleDetails;
+                var isCheck = string.Empty;
+            }
+            @if (parentMenu != null)
+            {
+                if (parentMenu.Count == 0)
+                {
+                    <span>No Parent Menu found.</span>
+                }
+                else
+                {
+                    <ul class="treeview tree2 tvState">
+                        @foreach (var l1 in parentMenu.Where(p => p.ParentMenuId == Guid.Empty || p.ParentMenuId == null))
+                        {
+                            isCheck = null;
+                            if (Model.Any(x => x.ParentMenuId == l1.ParentMenuId && x.URL == l1.URL)) { if (l1.RoleId != Guid.Empty) { isCheck = "checked"; } }
+
+                            <li style="list-style: none;" id="li@(l1.MenuId)">
+                                <input type="checkbox" class="Lavel1 form-check-input" id="chkT@(l1.MenuId)" value="@(l1.MenuId)" @isCheck />
+                                &nbsp; @l1.MenuName
+                                @{
+                                    var l2Menu = parentMenu.Where(p => p.ParentMenuId == l1.MenuId);
+                                }
+                                @if (l2Menu.Any())
+                                {
+                                    <ul class="treeview tree2 tvDistrict">
+                                        @foreach (var l2 in l2Menu)
+                                        {
+                                            isCheck = null;
+                                            var l3Menu = parentMenu.Where(p => p.ParentMenuId == l2.MenuId);
+                                            if (Model.Any(x => x.ParentMenuId == l2.ParentMenuId && x.MenuId == l2.MenuId))
+                                            {
+                                                if (l2.RoleId != Guid.Empty) { isCheck = "checked"; }
+                                            }
+
+                                            <li style="list-style: none;">
+                                                <input type="checkbox" class="Lavel2 form-check-input" id="chkS@(l2.MenuId)" value="@(l2.MenuId)" @isCheck />
+                                                &nbsp; @l2.MenuName
+                                            </li>
+                                            
+                                            if (l3Menu.Any())
+                                            {
+                                                <ul class="tree2 tvBlock tree">
+                                                    @foreach (var l3 in l3Menu)
+                                                    {
+                                                        isCheck = null;
+                                                        if (Model.Any(x => x.ParentMenuId == l3.ParentMenuId && x.MenuId == l3.MenuId)) { if (l3.RoleId != Guid.Empty) { isCheck = "checked"; } }
+
+                                                        <li style="list-style: none;">
+                                                            <input type="checkbox" class="Lavel3 form-check-input" id="chkS@(l3.MenuId)" value="@(l3.MenuId)" @isCheck />
+                                                            &nbsp; @l3.MenuName
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            }
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        </div>
+        <div class="mt-3 col-12 text-end">
+            <input type="button" value="Collapse And Expand All" class="CollapseAll btn btn-outline-dark btn-rounded btn-sm" />
+            <input type="button" value="Save Selected Role Rights" onclick="getCheckValues()" class="btn btn-submit btn-sm" />
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jsTree.js" asp-append-version="true"></script>
+
+<script>
+    $(".CollapseAll").click(function () {
+        $('.tree2 .branch').each(function () {
+            let icon = $(this).children('i:first');
+            icon.toggleClass('mdi mdi-arrow-down-drop-circle mdi mdi-arrow-right-drop-circle');
+            $(this).children().children().toggle();
+        });
+    });
+
+    function getCheckValues(e) {
+        let roleId = $("#roleId option:selected").val();
+        console.log(roleId);
+        if (roleId === "") {
+            commonMessage('warning', "Please select a role before proceeding menu assignment.");
+            e.preventDefault();
+        }
+        else {
+            let allVals = [];
+            
+            $('ul li input:checked').each(function () {
+                allVals.push($(this).val());
+            });
+            
+            $("#hdnCheckedVal").val(allVals);
+            if (allVals.length === 0) {
+                commonMessage('warning', "Please select at lease a single menu rights before proceeding menu assignment.");
+                e.preventDefault();
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: "/Account/InsertRoleRights/",
+                    headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                    data: { roleId: roleId, menuIds: allVals.toString() },
+                    success: function (data) {
+                        if (data.success === 1) {
+                            commonMessage('success', "Role rights have been successfully assigned to the selected role.");
+                        } else { 
+                            commonMessage('warning', "The role rights could not be updated.");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        commonMessage('error', "An error occurred while processing the request.");
+                    }
+                });
+
+            }
+        }
+    }
+</script>
