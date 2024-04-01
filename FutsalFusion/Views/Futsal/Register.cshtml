@@ -161,6 +161,7 @@
             $("#div-court-grid").html(data.htmlData);
         }
         else {
+            commonMessage("success", "Futsal Registration Successful");
             window.location.href = "@Url.Action("Index", "Futsal")";
         }
     }

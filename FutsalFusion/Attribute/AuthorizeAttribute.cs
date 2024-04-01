@@ -23,7 +23,7 @@ public class AuthorizeAttribute : ActionFilterAttribute
 
         if (user == null)
         {
-            filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { action = "UnauthorizedAccess", controller = "Handler" }));
+            filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { action = "LogOut", controller = "Account" }));
 
             base.OnActionExecuting(filterContext);
             

@@ -1,4 +1,6 @@
-﻿namespace FutsalFusion.Application.DTOs.Futsal;
+﻿using FutsalFusion.Application.DTOs.Appointment;
+
+namespace FutsalFusion.Application.DTOs.Futsal;
 
 public class CourtDetailsResponseDto
 {
@@ -20,7 +22,13 @@ public class CourtDetailsResponseDto
     
     public string EmailAddress { get; set; }
     
+    public int OpeningHours { get; set; }
+    
+    public int ClosingHours { get; set; }
+    
     public List<string> CourtImageURL { get; set; }
+    
+    public List<BookingSlotDto> BookingSlots { get; set; }
     
     public List<FutsalWorkingHours> WorkingHours { get; set; }
 

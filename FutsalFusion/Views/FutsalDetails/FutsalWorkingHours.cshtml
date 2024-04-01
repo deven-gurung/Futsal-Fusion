@@ -1,0 +1,141 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model FutsalFusion.Application.DTOs.Futsal.FutsalResponseDto
+
+@{
+    ViewData["Title"] = "Futsal Working Hours";
+    
+    var daysOfWeek = new List<string> { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+}
+
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Fusion</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Overview</a></li>
+                                <li class="breadcrumb-item active">Working Hours</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Futsal Working Hours</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6">
+                    <form asp-controller="Futsal" asp-action="FutsalWorkingHours" method="post">
+                        <input asp-for="FutsalId" type="hidden" class="form-control"/>
+                        <div class="card">
+                            <div class="card-body mb-0 pb-0">
+                                <h4 class="mt-0 mb-3">Working Hours</h4>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Day</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for (var i = 0; i < daysOfWeek.Count(); i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @{
+                                                    var day = i;
+                                                    var dayValue = i + 1;
+                                                }
+                                                <input asp-for="@Model.FutsalWorkingHours[day].WorkingDay" class="form-control" value="@dayValue" type="hidden"/>
+                                                <span>@daysOfWeek[i]</span>
+                                            </td>
+                                            <td>
+                                                <select asp-for="@Model.FutsalWorkingHours[day].StartTime" asp-items="@ViewBag.ddlStartTime" class="form-control">
+                                                    <option value="">Select a Start Time</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select asp-for="@Model.FutsalWorkingHours[day].EndTime" asp-items="@ViewBag.ddlEndTime" class="form-control">
+                                                    <option value="">Select an End Time</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer text-end">
+                                <a type="button" asp-action="Index" asp-route-futsalId="@Model.FutsalId" class="btn btn-light">Back to Details</a>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div> 
+                <div class="col-xxl-6 col-lg-6">
+                    <div class="card d-block">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h3 class="mt-0">@Model.FutsalName</h3>
+                                <div class="dropdown">
+                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ri-more-fill"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-pencil me-1"></i>Edit</a>
+                                        <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-delete me-1"></i>Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.IsExotic)
+                            {
+                                <div class="badge bg-secondary text-light mb-3">Exotic</div>
+                            }
+                            @if (Model.IsNew)
+                            {
+                                <div class="badge bg-primary text-light mb-3">New</div>
+                            }
+                            @if (Model.IsPopular)
+                            {
+                                <div class="badge bg-danger text-light mb-3">Popular</div>
+                            }
+            
+                            <h5>@Model.FutsalPhrase</h5>
+                            <h6>
+                                <p class="fst-italic">@Model.FutsalLocationAddress</p>
+                            </h6>
+                            <p class="text-muted mb-2">
+                                @Html.Raw(Model.FutsalOverview)
+                            </p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-4">
+                                        <h5>Initiated Date Date</h5>
+                                        <p>@Model.InitiatedDate</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-4">
+                                        <h5>Total Earnings</h5>
+                                        <p>Rs @Model.TotalEarnings</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-4">
+                                        <div id="tooltip-container">
+                                            <h5>Meet the Personnel</h5>
+                                            <a href="javascript:void(0);" data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="top" title="@Model.OwnerName" class="d-inline-block">
+                                                <img src="~/user-images/@Model.OwnerImageUrl" class="rounded-circle img-thumbnail avatar-sm" alt="friend">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>

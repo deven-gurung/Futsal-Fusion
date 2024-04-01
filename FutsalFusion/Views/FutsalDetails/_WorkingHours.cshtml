@@ -1,0 +1,19 @@
+﻿@model List<FutsalFusion.Application.DTOs.Futsal.FutsalWorkingHours>
+
+@foreach (var workingHour in Model)
+{
+    <div class="card mb-1 shadow-none border">
+        <div class="px-2">
+            <div class="row align-items-center">
+                <div class="col-5">
+                    <h5 href="javascript:void(0);" class="btn">@workingHour.Day</h5>
+                </div>
+                <div class="col-auto">
+                    <a href="javascript:void(0);" class="text-muted fw-bold">
+                        @workingHour.TimePeriod
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -7,6 +7,7 @@ public class SharedControllers
         "account",
         "base",
         "profile",
-        "password"
+        "password",
+        "appointment"
     ];
 }

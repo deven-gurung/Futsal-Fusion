@@ -29,3 +29,21 @@ body {
 body.modal-open {
   overflow: hidden;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bs-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

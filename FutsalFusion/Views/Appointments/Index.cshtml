@@ -1,0 +1,51 @@
+﻿@model List<FutsalFusion.Application.DTOs.Appointment.AppointmentsResponseDto>
+
+@{
+    ViewData["Title"] = "Appointments & Reservations";
+}
+
+<div class="wrapper">
+    <div class="content-page">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Fusion</a></li>
+                                    <li class="breadcrumb-item active">Appointments & Reservations</li>
+                                </ol>
+                            </div>
+                            <h4 class="page-title">Appointments</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-sm-5">
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="text-sm-end">
+                                            <button type="button" class="btn btn-success mb-2 me-1"><i class="mdi mdi-cog-outline"></i></button>
+                                            <button type="button" class="btn btn-light mb-2 me-1">Import</button>
+                                            <button type="button" class="btn btn-light mb-2">Export</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="div-appointments-list">
+                                    @{
+                                        await Html.RenderPartialAsync("_AppointmentsList", Model);
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div> 
+        </div> 
+    </div>
+</div>

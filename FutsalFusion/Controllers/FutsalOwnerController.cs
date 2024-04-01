@@ -24,6 +24,7 @@ public class FutsalOwnerController : BaseController<FutsalOwnerController>
                     select new FutsalOwnerResponseDto()
                     {
                         Name = user.FullName,
+                        ImageURL = user.ImageURL,
                         Email = user.EmailAddress,
                         FutsalName = futsal.Name,
                         FutsalLocation = $"{futsal.LocationAddress}, {futsal.City}",

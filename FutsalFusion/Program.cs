@@ -29,10 +29,7 @@ services.AddControllersWithViews(options =>
     
 }).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
 
-services.AddMvc(options =>
-{
-    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-});
+services.AddMvc();
 
 services.AddHsts(options =>
 {

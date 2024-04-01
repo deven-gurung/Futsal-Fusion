@@ -1,0 +1,46 @@
+﻿@using FutsalFusion.Domain.Constants
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model FutsalFusion.Application.DTOs.Futsal.FutsalRequestDto
+
+<div class="row">
+    <div class="mb-3 table-responsive">
+        <table class="table table-sm table-centered mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Image Uploads</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Courts != null)
+                {
+                    for (int i = 0; i < Model.Courts.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <span>@(i + 1).</span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" autocomplete="off" placeholder="Enter the court name" asp-for="@Model.Courts[i].Title" required>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" autocomplete="off" placeholder="Enter the court description" asp-for="@Model.Courts[i].Description" required>
+                            </td>
+                            <td>
+                                <select asp-for="@Model.Courts[i].Type" asp-items="@Html.GetEnumSelectList<CourtType>()" aria-required="true" class="form-select" required>
+                                    <option disabled="" label="Select a Court Type" selected="" value=""></option>
+                                </select>
+                            </td>
+                            <td>
+                                <input class="form-control" type="file" asp-for="@Model.Courts[i].Images" multiple>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

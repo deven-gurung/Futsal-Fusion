@@ -1,0 +1,198 @@
+﻿@model List<FutsalFusion.Application.DTOs.Appointment.AppointmentsResponseDto>
+
+<ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+    <li class="nav-item">
+        <a href="#reserved" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0 active">
+            <i class="mdi mdi-home-variant d-md-none d-block"></i>
+            <span class="d-none d-md-block">Current Bookings</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#rejected" data-bs-toggle="tab" aria-expanded="true" class="nav-link rounded-0">
+            <i class="mdi mdi-account-circle d-md-none d-block"></i>
+            <span class="d-none d-md-block">Rejected</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#accepted" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+            <i class="mdi mdi-settings-outline d-md-none d-block"></i>
+            <span class="d-none d-md-block">Accepted</span>
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane show active" id="reserved">
+        <div class="table-responsive">
+            <table class="table table-centered w-100 dt-responsive nowrap" id="reserved-datatable">
+                <thead class="table-light">
+                    <tr>
+                        <th class="all" style="width: 20px;">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="customCheck1">
+                                <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                            </div>
+                        </th>
+                        <th class="all">Court Name</th>
+                        <th>Booked Date</th>
+                        <th>Appointed Date</th>
+                        <th>Time Slot</th>
+                        <th>Total Price</th>
+                        <th>Payment Status</th>
+                        <th style="width: 85px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Where(x => x is { IsApproved: false, IsActionCompleted: false }))
+                {
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="customCheck2">
+                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="m-0 d-inline-block align-middle font-16">
+                                <a href="#" class="text-body">@item.CourtName</a>
+                            </p>
+                        </td>
+                        <td>@item.BookedDate</td>
+                        <td>@item.AppointedDate</td>
+                        <td>@item.TimeSlot</td>
+                        <td>Rs @item.TotalPrice</td>
+                        <td>
+                            @if (item.PaymentStatus == "Paid")
+                            {
+                                <h5><span class="badge bg-success text-white">Yes</span></h5>
+                            }
+                            else
+                            {
+                                <h5><span class="badge bg-warning text-white">No</span></h5>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane" id="rejected">
+        <div class="table-responsive">
+            <table class="table table-centered w-100 dt-responsive nowrap" id="rejected-datatable">
+                <thead class="table-light">
+                    <tr>
+                        <th class="all" style="width: 20px;">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="customCheck2">
+                                <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                            </div>
+                        </th>
+                        <th class="all">Court Name</th>
+                        <th>Booked Date</th>
+                        <th>Appointed Date</th>
+                        <th>Time Slot</th>
+                        <th>Total Price</th>
+                        <th>Payment Status</th>
+                        <th>Action Done By</th>
+                        <th>Action Done On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Where(x => x is { IsApproved: false, IsActionCompleted: true }))
+                {
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="customCheck2">
+                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="m-0 d-inline-block align-middle font-16">
+                                <a href="#" class="text-body">@item.CourtName</a>
+                            </p>
+                        </td>
+                        <td>@item.AppointedUser</td>
+                        <td>@item.BookedDate</td>
+                        <td>@item.AppointedDate</td>
+                        <td>@item.TimeSlot</td>
+                        <td>Rs @item.TotalPrice</td>
+                        <td>
+                            @if (item.PaymentStatus == "Paid")
+                            {
+                                <h5><span class="badge bg-success text-white">Yes</span></h5>
+                            }
+                            else
+                            {
+                                <h5><span class="badge bg-warning text-white">No</span></h5>
+                            }
+                        </td>
+                        <td>@item.ActionDoneUser</td>
+                        <td>@item.ActionDoneDate</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane" id="accepted">
+       <div class="table-responsive">
+           <table class="table table-centered w-100 dt-responsive nowrap" id="accepted-datatable">
+               <thead class="table-light">
+                   <tr>
+                       <th class="all" style="width: 20px;">
+                           <div class="form-check">
+                               <input type="checkbox" class="form-check-input" id="customCheck3">
+                               <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                           </div>
+                       </th>
+                       <th class="all">Court Name</th>
+                       <th>Booked Date</th>
+                       <th>Appointed Date</th>
+                       <th>Time Slot</th>
+                       <th>Total Price</th>
+                       <th>Payment Status</th>
+                       <th>Action Done By</th>
+                       <th>Action Done On</th>
+                   </tr>
+               </thead>
+               <tbody>
+               @foreach (var item in Model.Where(x => x is { IsApproved: true, IsActionCompleted: true }))
+               {
+                   <tr>
+                       <td>
+                           <div class="form-check">
+                               <input type="checkbox" class="form-check-input" id="customCheck2">
+                               <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                           </div>
+                       </td>
+                       <td>
+                           <p class="m-0 d-inline-block align-middle font-16">
+                               <a href="#" class="text-body">@item.CourtName</a>
+                           </p>
+                       </td>
+                       <td>@item.AppointedUser</td>
+                       <td>@item.BookedDate</td>
+                       <td>@item.AppointedDate</td>
+                       <td>@item.TimeSlot</td>
+                       <td>Rs @item.TotalPrice</td>
+                       <td>
+                           @if (item.PaymentStatus == "Paid")
+                           {
+                               <h5><span class="badge bg-success text-white">Yes</span></h5>
+                           }
+                           else
+                           {
+                               <h5><span class="badge bg-warning text-white">No</span></h5>
+                           }
+                       </td>
+                       <td>@item.ActionDoneUser</td>
+                       <td>@item.ActionDoneDate</td>
+                   </tr>
+               }
+               </tbody>
+           </table>
+        </div>
+    </div>
+</div>
