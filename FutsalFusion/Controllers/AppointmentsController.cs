@@ -1,6 +1,7 @@
 ﻿using FutsalFusion.Application.DTOs.Appointment;
 using FutsalFusion.Application.Interfaces.Repositories.Base;
 using FutsalFusion.Controllers.Base;
+using FutsalFusion.Domain.Constants;
 using FutsalFusion.Domain.Entities;
 using FutsalFusion.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -47,18 +48,41 @@ public class AppointmentsController : BaseController<AppointmentsController>
     }
 
     [HttpPost]
-    public IActionResult BookingAction(string appointmentId, bool isApproved)
+    public IActionResult BookingAction([FromBody] AppointmentApprovalModel appointmentModel)
     {
-        var appointment = _genericRepository.GetById<Appointment>(Guid.Parse(appointmentId));
+        if (string.IsNullOrEmpty(appointmentModel.AppointmentId) || string.IsNullOrEmpty(appointmentModel.IsApproved))
+        {
+            return Json(new
+            {
+                success = 0
+            });
+        }
+        
+        var appointment = _genericRepository.GetById<Appointment>(Guid.Parse(appointmentModel.AppointmentId));
 
         appointment.IsActionComplete = true;
-        appointment.IsApproved = isApproved;
+        appointment.IsApproved = appointmentModel.IsApproved == "Approved";
         
         appointment.LastModifiedAt = DateTime.Now;
         appointment.LastModifiedBy = UserDetail.UserId;
         
         _genericRepository.Update(appointment);
 
+        var notification = new Notification()
+        {
+            CreatedAt = DateTime.Now,
+            SenderId = UserDetail.UserId,
+            CreatedBy = UserDetail.UserId,
+            ReceiverId = appointment.BookedUserId,
+            Title = "Booking Action Alert",
+            Content = "Your booking slot has received a new output.",
+            IsActive = true,
+            SenderEntity = (int)Roles.Player,
+            ReceiverEntity = (int)Roles.Futsal,
+        };
+
+        _genericRepository.Insert(notification);
+        
         var court = _genericRepository.GetById<Court>(appointment.BookedCourtId);
         
         var futsal = _genericRepository.GetById<Futsal>(court.FutsalId);
@@ -86,7 +110,15 @@ public class AppointmentsController : BaseController<AppointmentsController>
 
         return Json(new
         {
+            success = 1,
             htmlData = htmlData
         });
     }
+}
+
+public class AppointmentApprovalModel
+{
+    public string AppointmentId { get; set; }
+    
+    public  string IsApproved { get; set; }
 }

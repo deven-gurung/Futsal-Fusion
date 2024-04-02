@@ -2,16 +2,24 @@
     ViewData["Title"] = "Unauthorized Access";
 }
 
-<div class="row justify-content-center">
-    <div class="col-lg-4">
-        <div class="text-center">
-            <img src="~/assets/images/unauthorized.png" height="150" alt="Unauthorized" asp-append-version="true">
-            <h1 class="text-danger mt-4">401</h1>
-            <h4 class="text-uppercase text-danger mt-3">Unauthorized Access</h4>
-            <p class="text-body mt-3">
-                Your request has not been applied because it lacks valid authentication credentials for the target resource.
-            </p>
-            <a class="btn btn-create mt-3" href='javascript:history.go(-1)'><i class="mdi mdi-reply"></i> Return to Back</a>
+<div class="wrapper">
+    <div class="content-page">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4">
+                        <div class="text-center">
+                            <img src="~/assets/images/unauthorized.png" height="250" alt="Unauthorized" asp-append-version="true">
+                            <h1 class="text-danger mt-4">401</h1>
+                            <h4 class="text-uppercase text-danger mt-3">Unauthorized Access</h4>
+                            <p class="text-body mt-3">
+                                Your request has not been applied because it lacks valid authentication credentials for the target resource.
+                            </p>
+                            <a class="btn btn-create mt-3" href='javascript:history.go(-1)'><i class="mdi mdi-reply"></i> Return to Back</a>
+                        </div>
+                    </div>
+                </div>     
+            </div>
         </div>
     </div>
-</div>     
+</div>

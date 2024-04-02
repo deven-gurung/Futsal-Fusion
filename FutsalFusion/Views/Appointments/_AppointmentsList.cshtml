@@ -207,17 +207,24 @@
             cancelButtonText: 'Reject',
             confirmButtonColor: '#DD5471',
         }).then((result) => {
-            let approvalStatus = result.isConfirmed;
-            console.log(JSON.stringify({ appointmentId: appointmentId, isApproved: approvalStatus }));
+            let approvalStatus = result.isConfirmed ? "Approved" : "Rejected";
+            console.log(typeof (approvalStatus.toString()));
+            console.log(typeof (appointmentId.toString()));
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
                 url: "/Appointments/BookingAction/",
-                data: JSON.stringify({ appointmentId: appointmentId, isApproved: approvalStatus }),
+                data: JSON.stringify({ "appointmentId": appointmentId.toString(), "isApproved": approvalStatus.toString() }),
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                 contentType: 'application/json',
                 success: function(data) {
-                    commonMessage('success', "Your appointment has been successfully booked.");
-                    $("#div-appointments-list").html(data.htmlData);
+                    if (data.success === 1){
+                        commonMessage('success', "Your appointment has been successfully booked.");
+                        $("#div-appointments-list").html(data.htmlData);
+                    }
+                    else {
+                        commonMessage('error', "An error occurred while processing the request.");
+                    }
                 },
                 error: function(xhr, status, error) {
                     commonMessage('error', "An error occurred while processing the request.");

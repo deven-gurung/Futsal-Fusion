@@ -163,7 +163,6 @@ namespace FutsalFusion.Infrastructure.Migrations
                     SenderEntity = table.Column<int>(type: "int", nullable: false),
                     ReceiverEntity = table.Column<int>(type: "int", nullable: false),
                     IsSeen = table.Column<bool>(type: "bit", nullable: false),
-                    SenderId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -182,12 +181,6 @@ namespace FutsalFusion.Infrastructure.Migrations
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Notifications_AppUsers_SenderId1",
-                        column: x => x.SenderId1,
-                        principalTable: "AppUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -573,11 +566,6 @@ namespace FutsalFusion.Infrastructure.Migrations
                 name: "IX_Notifications_SenderId",
                 table: "Notifications",
                 column: "SenderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Notifications_SenderId1",
-                table: "Notifications",
-                column: "SenderId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_KitId",

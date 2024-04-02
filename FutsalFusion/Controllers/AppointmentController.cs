@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using FutsalFusion.Application.Interfaces.Repositories.Base;
 using FutsalFusion.Controllers.Base;
+using FutsalFusion.Domain.Constants;
 using FutsalFusion.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,10 @@ public class AppointmentController : BaseController<AppointmentController>
         {
             parsedTimeSlot = TimeSpan.FromHours(timeSlotHours);
         }
+
+        var court = _genericRepository.GetById<Court>(Guid.Parse(appointmentModel.CourtId));
+
+        var futsal = _genericRepository.GetById<Futsal>(court.FutsalId);
         
         var appointment = new Appointment()
         {
@@ -50,6 +55,23 @@ public class AppointmentController : BaseController<AppointmentController>
 
         _genericRepository.Insert(appointment);
 
+        var userId = UserDetail.UserId;
+        
+        var notification = new Notification()
+        {
+            CreatedAt = DateTime.Now,
+            SenderId = userId,
+            CreatedBy = userId,
+            ReceiverId = futsal.FutsalOwnerId,
+            Title = "Booking Alert",
+            Content = "You have received a new booking notification",
+            IsActive = true,
+            SenderEntity = (int)Roles.Player,
+            ReceiverEntity = (int)Roles.Futsal,
+        };
+
+        _genericRepository.Insert(notification);
+        
         TempData["Success"] = "Your appointment has been successfully booked";
         
         return RedirectToAction("Index", "Futsal");
@@ -64,5 +86,6 @@ public class AppointmentModel
     public string AppointedDate { get; set; }
     public string TimeSlot { get; set; }
     public string Price { get; set; }
+    
     public string Payment { get; set; }
 }

@@ -3,16 +3,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid d-flex align-items-center justify-content-center" style="min-height: 100vh;">
-    <div class="col-lg-4">
-        <div class="text-center">
-            <img src="~/assets/images/file-searching.svg" height="150" alt="Bad Request" asp-append-version="true">
-            <h1 class="text-danger mt-4">400</h1>
-            <h4 class="text-danger text-danger mt-3">Bad Request</h4>
-            <p class="text-body mt-3">
-                Your request has not been applied because it is invalid due to an apparent client error.
-            </p>
-            <a class="btn btn-create mt-3" href='javascript:history.go(-1)'><i class="mdi mdi-reply"></i> Return to Back</a>
-        </div> 
-    </div> 
+<div class="wrapper">
+    <div class="content-page">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="container-fluid d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+                    <div class="col-lg-4">
+                        <div class="text-center">
+                            <img src="~/assets/images/file-searching.svg" height="250" alt="Bad Request" asp-append-version="true">
+                            <h1 class="text-danger mt-4">400</h1>
+                            <h4 class="text-danger text-danger mt-3">Bad Request</h4>
+                            <p class="text-body mt-3">
+                                Your request has not been applied because it is invalid due to an apparent client error.
+                            </p>
+                            <a class="btn btn-create mt-3" href='javascript:history.go(-1)'><i class="mdi mdi-reply"></i> Return to Back</a>
+                        </div> 
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

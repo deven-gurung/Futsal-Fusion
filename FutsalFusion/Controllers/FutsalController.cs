@@ -139,6 +139,51 @@ public class FutsalController : BaseController<FutsalController>
                 _genericRepository.Insert(courtImageModel);
             }
 
+            var courts = _genericRepository.Get<Court>(x => x.FutsalId == futsalId);
+
+            foreach (var court in courts)
+            {
+                var priceForMorning = new CourtPrice()
+                {
+                    CourtId = court.Id,
+                    TimeTo = new TimeSpan(6, 0, 0),
+                    TimeFrom = new TimeSpan(14, 0, 0),
+                    IsDeleted = false,
+                    IsActive = true,
+                    CreatedBy = UserDetail.UserId,
+                    CreatedAt = DateTime.Now,
+                    PricePerHour = 1200,
+                };
+                
+                var priceForDay = new CourtPrice()
+                {
+                    CourtId = court.Id,
+                    TimeTo = new TimeSpan(15, 0, 0),
+                    TimeFrom = new TimeSpan(20, 0, 0),
+                    IsDeleted = false,
+                    IsActive = true,
+                    CreatedBy = UserDetail.UserId,
+                    CreatedAt = DateTime.Now,
+                    PricePerHour = 1500,
+                };
+                
+                var priceForEvening = new CourtPrice()
+                {
+                    CourtId = court.Id,
+                    TimeTo = new TimeSpan(21, 0, 0),
+                    TimeFrom = new TimeSpan(22, 0, 0),
+                    IsDeleted = false,
+                    IsActive = true,
+                    CreatedBy = UserDetail.UserId,
+                    CreatedAt = DateTime.Now,
+                    PricePerHour = 200,
+                };
+                
+                _genericRepository.Insert(priceForMorning);
+                _genericRepository.Insert(priceForDay);
+                _genericRepository.Insert(priceForEvening);
+            }
+            
             for (var i = 1; i <= 7; i++)
             {
                 var workingHours = new WorkingHours()

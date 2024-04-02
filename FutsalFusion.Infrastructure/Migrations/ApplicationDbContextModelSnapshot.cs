@@ -666,9 +666,6 @@ namespace FutsalFusion.Infrastructure.Migrations
                     b.Property<Guid>("SenderId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SenderId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -676,8 +673,6 @@ namespace FutsalFusion.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SenderId");
-
-                    b.HasIndex("SenderId1");
 
                     b.ToTable("Notifications");
                 });
@@ -1019,12 +1014,6 @@ namespace FutsalFusion.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("FutsalFusion.Domain.Entities.AppUser", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId1")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Receiver");
