@@ -32,6 +32,7 @@ public class AppointmentsController : BaseController<AppointmentsController>
         var result = appointments.Select(x => new AppointmentsResponseDto()
         {
             AppointmentId = x.Id,
+            IsActive = x.IsActive,
             CourtId = x.BookedCourtId,
             CourtName = _genericRepository.GetById<Court>(x.BookedCourtId).Title,
             TotalPrice = x.TotalPrice.ToString("N2"),
@@ -95,6 +96,7 @@ public class AppointmentsController : BaseController<AppointmentsController>
         {
             AppointmentId = x.Id,
             CourtId = x.BookedCourtId,
+            IsActive = x.IsActive,
             CourtName = _genericRepository.GetById<Court>(x.BookedCourtId).Title,
             TotalPrice = x.TotalPrice.ToString("N2"),
             IsApproved = x.IsApproved,

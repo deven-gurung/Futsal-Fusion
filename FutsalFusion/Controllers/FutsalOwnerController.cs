@@ -29,6 +29,7 @@ public class FutsalOwnerController : BaseController<FutsalOwnerController>
                         FutsalName = futsal.Name,
                         FutsalLocation = $"{futsal.LocationAddress}, {futsal.City}",
                         TotalAppointments = appointments.Count<Appointment>(),
+                        IsActive = user.IsActive,
                         PhoneNumber = user.MobileNo
                     }).ToList();
 

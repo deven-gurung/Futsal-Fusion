@@ -2,6 +2,13 @@
 
 public class FutsalGridResponseDto
 {
+    public string Selection { get; set; }
+
+    public List<FutsalDetails> FutsalDetails { get; set; }
+}
+
+public class FutsalDetails
+{
     public Guid FutsalId { get; set; }
     
     public bool IsExotic { get; set; }
@@ -23,5 +30,7 @@ public class FutsalGridResponseDto
     public string OwnerName { get; set; }
     
     public string OwnerImageUrl { get; set; }
+    
+    public bool IsActive { get; set; }
 }
 

@@ -73,11 +73,12 @@ public class AppointmentController : BaseController<AppointmentController>
         _genericRepository.Insert(notification);
         
         TempData["Success"] = "Your appointment has been successfully booked";
-        
-        return RedirectToAction("Index", "Futsal");
-    }
 
-    
+        return Json(new
+        {
+            data = true
+        });
+    }
 }
 
 public class AppointmentModel

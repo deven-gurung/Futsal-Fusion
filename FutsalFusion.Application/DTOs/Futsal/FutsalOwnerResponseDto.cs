@@ -16,5 +16,7 @@ public class FutsalOwnerResponseDto
     
     public string PhoneNumber { get; set; }
     
+    public bool IsActive { get; set; }
+    
     public int TotalAppointments { get; set; }
 }

@@ -51,7 +51,7 @@
                             <h6 class="m-0 font-16 fw-semibold"> Notification</h6>
                         </div>
                         <div class="col-auto">
-                            <a href="javascript: void(0);" class="text-dark text-decoration-underline">
+                            <a onclick="deleteAllNotifications()" href="#"  class="text-dark text-decoration-underline">
                                 <small>Clear All</small>
                             </a>
                         </div>
@@ -177,6 +177,21 @@
             headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
             success: function (data) {
                 $("#div-notifications-list").html(data.htmlData);
+            },
+            error: function(xhr, status, error) {
+                commonMessage('error', "An error occurred while processing the request.");
+            }
+        });
+    }
+    
+    function deleteAllNotifications(){
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: "/Notification/DeleteAllNotifications/",
+            headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+            success: function (data) {
+                commonMessage("success", "All your notifications has been successfully cleared");
             },
             error: function(xhr, status, error) {
                 commonMessage('error', "An error occurred while processing the request.");

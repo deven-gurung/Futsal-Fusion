@@ -27,4 +27,6 @@ public class AppointmentsResponseDto
     public bool IsApproved { get; set; }
     
     public bool IsActionCompleted { get; set; }
+    
+    public bool IsActive { get; set; }
 }

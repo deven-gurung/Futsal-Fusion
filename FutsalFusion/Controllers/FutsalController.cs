@@ -1,4 +1,5 @@
-﻿using FutsalFusion.Application.DTOs.Appointment;
+﻿using ClosedXML.Excel;
+using FutsalFusion.Application.DTOs.Appointment;
 using FutsalFusion.Application.DTOs.Futsal;
 using FutsalFusion.Application.Interfaces.Repositories.Base;
 using FutsalFusion.Application.Interfaces.Services;
@@ -25,20 +26,21 @@ public class FutsalController : BaseController<FutsalController>
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult Index(string? type = null)
     {
-        var result = (from futsal in _genericRepository.Get<Futsal>()
+        var futsalDetailsList = (from futsal in _genericRepository.Get<Futsal>()
                 let owner = _genericRepository.GetById<AppUser>(futsal.FutsalOwnerId)
                 let futsalImages = _genericRepository.GetFirstOrDefault<FutsalImage>(x => x.FutsalId == futsal.Id)
                 let courts = _genericRepository.Get<Court>(x => x.FutsalId == futsal.Id)
                 let appointments = _genericRepository.Get<Appointment>(x => courts.Select<Court, Guid>(z => z.Id).Contains(x.BookedCourtId))
-                select new FutsalGridResponseDto()
+                select new FutsalDetails()
                 {
                     FutsalId = futsal.Id,
                     FutsalName = futsal.Name,
                     Slogan = futsal.Phrase,
                     OwnerName = owner.FullName,
                     ImageUrl = futsalImages!.ImageURL,
+                    IsActive = futsal.IsActive,
                     IsNew = futsal.CreatedAt.AddDays(15).Date >= DateTime.Today,
                     IsPopular = appointments.Count<Appointment>(x => x.CreatedAt.AddDays(-7).Date <= DateTime.Now.Date && x is { IsApproved: true, IsActionComplete: true }) > 20,
                     IsExotic = courts.Count<Court>() > 2,
@@ -47,6 +49,21 @@ public class FutsalController : BaseController<FutsalController>
                     TotalBookings = appointments.Count<Appointment>(),
                 }).ToList();
 
+        var futsalDetails = type switch
+        {
+            "All" => futsalDetailsList.Where(x => x.IsActive).ToList(),
+            "Exotic" => futsalDetailsList.Where(x => x.IsExotic).ToList(),
+            "Popular" => futsalDetailsList.Where(x => x.IsPopular).ToList(),
+            "Inactive" => futsalDetailsList.Where(x => !x.IsActive).ToList(),
+            _ => futsalDetailsList.Where(x => x.IsActive).ToList()
+        };
+
+        var result = new FutsalGridResponseDto()
+        {
+            Selection = type ?? "All",
+            FutsalDetails = futsalDetails
+        };
+        
         return View(result);
     }
 
@@ -245,6 +262,26 @@ public class FutsalController : BaseController<FutsalController>
     }
 
     [HttpGet]
+    public IActionResult ActivationStatus(Guid futsalId)
+    {
+        var futsal = _genericRepository.GetById<Futsal>(futsalId);
+
+        futsal.IsActive = !futsal.IsActive;
+        
+        _genericRepository.Update(futsal);
+
+        var owner = _genericRepository.GetById<AppUser>(futsal.FutsalOwnerId);
+
+        owner.IsActive = !owner.IsActive;
+        
+        _genericRepository.Update(owner);
+
+        TempData["Success"] = "The activation status of the following futsal has been successfully changed";
+        
+        return RedirectToAction("Index");
+    }
+    
+    [HttpGet]
     public IActionResult FutsalDetails(Guid futsalId)
     {
         var futsal = _genericRepository.GetById<Futsal>(futsalId);
@@ -313,6 +350,7 @@ public class FutsalController : BaseController<FutsalController>
             IsPopular = appointments.Count(x =>
                 x.CreatedAt.AddDays(-7).Date <= DateTime.Now.Date &&
                 x is { IsApproved: true, IsActionComplete: true }) > 20,
+            IsActive = futsal.IsActive,
             IsExotic = courts.Count() > 2,
             OwnerImageUrl = owner.ImageURL ?? "sample-profile.png",
             Courts = courtList,
@@ -759,4 +797,117 @@ public class FutsalController : BaseController<FutsalController>
 
         return result;
     }
+    
+    [HttpGet]
+    public IActionResult DownloadSheet()
+    {
+        var futsals = _genericRepository.Get<Futsal>();
+
+        var result = futsals.Select(futsal => new FutsalVenueDto()
+            {
+                Id = futsal.Id,
+                Name = futsal.Name,
+                Description = futsal.Description,
+                Phrase = futsal.Phrase,
+                LocationAddress = futsal.LocationAddress,
+                City = futsal.City,
+                IsActive = futsal.IsActive,
+                RegisteredDate = futsal.CreatedAt.ToString("dd-MM-yyyy"),
+                OwnerEmail = _genericRepository.GetById<AppUser>(futsal.FutsalOwnerId).EmailAddress,
+                OwnerName = _genericRepository.GetById<AppUser>(futsal.FutsalOwnerId).FullName,
+                NumberOfCourts = _genericRepository.Get<Court>(x => x.FutsalId == futsal.Id).Count(),
+                NumberOfAppointments = _genericRepository.Get<Appointment>()
+                    .Count(a => _genericRepository.Get<Court>()
+                        .Any(c => c.Id == a.BookedCourtId && c.FutsalId == futsal.Id))
+            })
+            .ToList();
+
+        var stream = CreateExcelFile(result);
+
+        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Futsal-Venues.xlsx");
+    }
+    
+    public MemoryStream CreateExcelFile(List<FutsalVenueDto> venues)
+    {
+        var workbook = new XLWorkbook();
+        var worksheet = workbook.Worksheets.Add("Futsal Venues");
+
+        var headerRange = worksheet.Range("A1:K1");
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Font.FontName = "Arial";
+        headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+        headerRange.Style.Font.FontColor = XLColor.DarkBlue;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+        worksheet.Column(1).Width = 40; 
+        worksheet.Column(2).Width = 30;
+        worksheet.Column(3).Width = 30; 
+        worksheet.Column(4).Width = 30; 
+        worksheet.Column(5).Width = 25; 
+        worksheet.Column(6).Width = 15; 
+        worksheet.Column(7).Width = 20; 
+        worksheet.Column(8).Width = 35; 
+        worksheet.Column(9).Width = 20; 
+        worksheet.Column(10).Width = 18; 
+        worksheet.Column(11).Width = 25; 
+
+        worksheet.Cell("A1").Value = "ID";
+        worksheet.Cell("B1").Value = "Futsal Name";
+        worksheet.Cell("C1").Value = "Description";
+        worksheet.Cell("D1").Value = "Phrase";
+        worksheet.Cell("E1").Value = "Location Address";
+        worksheet.Cell("F1").Value = "City";
+        worksheet.Cell("G1").Value = "Owner Name";
+        worksheet.Cell("H1").Value = "Owner Email Address";
+        worksheet.Cell("I1").Value = "Registered Date";
+        worksheet.Cell("J1").Value = "Number of Courts";
+        worksheet.Cell("K1").Value = "Number of Appointments";
+
+        for (var i = 0; i < venues.Count; i++)
+        {
+            var row = i + 2; 
+            var venue = venues[i];
+            worksheet.Cell(row, 1).Value = venue.Id.ToString();
+            worksheet.Cell(row, 2).Value = venue.Name;
+            worksheet.Cell(row, 3).Value = venue.Description;
+            worksheet.Cell(row, 4).Value = venue.Phrase;
+            worksheet.Cell(row, 5).Value = venue.LocationAddress;
+            worksheet.Cell(row, 6).Value = venue.City;
+            worksheet.Cell(row, 7).Value = venue.OwnerName;
+            worksheet.Cell(row, 8).Value = venue.OwnerEmail;
+            worksheet.Cell(row, 9).Value = venue.RegisteredDate;
+            worksheet.Cell(row, 10).Value = venue.NumberOfCourts;
+            worksheet.Cell(row, 11).Value = venue.NumberOfAppointments;
+            worksheet.Row(row).Style.Font.FontName = "Arial";
+            
+            for (var col = 1; col <= 11; col++)
+            {
+                worksheet.Cell(row, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            }
+
+            if (venue.IsActive) continue;
+            {
+                for (var col = 1; col <= 11; col++)
+                {
+                    worksheet.Cell(row, col).Style.Font.FontColor = XLColor.Red;
+                }
+            }
+
+        }
+
+        for (var col = 1; col <= 11; col++)
+        {
+            worksheet.Cell(1, col).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        }
+        
+        var stream = new MemoryStream();
+        
+        workbook.SaveAs(stream);
+        
+        stream.Position = 0;
+        
+        return stream;
+    }
+    
+    
 }

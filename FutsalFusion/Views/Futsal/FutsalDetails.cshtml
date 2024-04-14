@@ -44,8 +44,16 @@
                                         <i class="ri-more-fill"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-pencil me-1"></i>Edit</a>
-                                        <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-delete me-1"></i>Delete</a>
+                                        <a asp-action="ActivationStatus" asp-route-futsalId="@Model.FutsalId" class="dropdown-item">
+                                            @if (Model.IsActive)
+                                            {
+                                                <i class="mdi mdi-delete me-1"></i><span>Deactivate</span>
+                                            }
+                                            else
+                                            {
+                                                <i class="mdi mdi-backup-restore me-1"></i><span>Activate</span>
+                                            }
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -61,6 +69,15 @@
                             {
                                 <div class="badge bg-danger text-light mb-3">Popular</div>
                             }
+                            @if (Model.IsActive)
+                            {
+                                <div class="badge bg-success text-light mb-3">Active</div>
+                            }
+                            else
+                            {
+                                <div class="badge bg-danger text-light mb-3">Inactive</div>
+                            }
+                            
 
                             <h5>@Model.FutsalPhrase</h5>
                             <h6>

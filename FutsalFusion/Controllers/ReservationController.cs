@@ -36,7 +36,8 @@ public class ReservationController : BaseController<ReservationController>
             TimeSlot = $"{x.TimeSlotStartTime} - {x.TimeSlotEndTime}",
             AppointedDate = x.AppointedDate.ToString("dd-MM-yyyy"),
             BookedDate = x.BookedDate.ToString("dd-MM-yyyy"),
-            PaymentStatus = x.IsPaid ? "Paid" : "Not Paid"
+            PaymentStatus = x.IsPaid ? "Paid" : "Not Paid",
+            IsActive = x.IsActive
         }).ToList();
 
         return View(result);
@@ -75,7 +76,60 @@ public class ReservationController : BaseController<ReservationController>
             TimeSlot = $"{x.TimeSlotStartTime} - {x.TimeSlotEndTime}",
             AppointedDate = x.AppointedDate.ToString("dd-MM-yyyy"),
             BookedDate = x.BookedDate.ToString("dd-MM-yyyy"),
-            PaymentStatus = x.IsPaid ? "Paid" : "Not Paid"
+            PaymentStatus = x.IsPaid ? "Paid" : "Not Paid",
+            IsActive = x.IsActive,
+        }).ToList();
+
+        var htmlData = ConvertViewToString("_AppointmentsList", result, true);
+
+        return Json(new
+        {
+            htmlData = htmlData
+        });
+    }
+
+    [HttpPost]
+    public IActionResult CancelReservation(Guid appointmentId)
+    {
+        var appointment = _genericRepository.GetById<Appointment>(appointmentId);
+
+        var appointmentDetails = _genericRepository.Get<AppointmentDetail>(x => x.AppointmentId == appointment.Id);
+
+        appointment.IsActive = false;
+        appointment.LastModifiedAt = DateTime.Now;
+        
+        _genericRepository.Update(appointment);
+        
+        var appointmentDetailsEntityList = appointmentDetails as AppointmentDetail[] ?? appointmentDetails.ToArray();
+        
+        if (appointmentDetailsEntityList.Any())
+        {
+            _genericRepository.RemoveMultipleEntity(appointmentDetailsEntityList);
+        }
+        
+        var court = _genericRepository.GetById<Court>(appointment.BookedCourtId);
+        
+        var futsal = _genericRepository.GetById<Futsal>(court.FutsalId);
+
+        var courts = _genericRepository.Get<Court>(x => x.FutsalId == futsal.Id);
+
+        var appointments = _genericRepository.Get<Appointment>(x => courts.Select(z => z.Id).Contains(x.BookedCourtId));
+
+        var result = appointments.Select(x => new AppointmentsResponseDto()
+        {
+            AppointmentId = x.Id,
+            CourtId = x.BookedCourtId,
+            CourtName = _genericRepository.GetById<Court>(x.BookedCourtId).Title,
+            TotalPrice = x.TotalPrice.ToString("N2"),
+            IsApproved = x.IsApproved,
+            AppointedUser = _genericRepository.GetById<AppUser>(x.BookedUserId).FullName,
+            IsActionCompleted = x.IsActionComplete,
+            TimeSlot = $"{x.TimeSlotStartTime} - {x.TimeSlotEndTime}",
+            AppointedDate = x.AppointedDate.ToString("dd-MM-yyyy"),
+            BookedDate = x.BookedDate.ToString("dd-MM-yyyy"),
+            PaymentStatus = x.IsPaid ? "Paid" : "Not Paid",
+            ActionDoneDate = x.LastModifiedAt?.ToString("dd-MM-yyyy"),
+            IsActive = x.IsActive
         }).ToList();
 
         var htmlData = ConvertViewToString("_AppointmentsList", result, true);

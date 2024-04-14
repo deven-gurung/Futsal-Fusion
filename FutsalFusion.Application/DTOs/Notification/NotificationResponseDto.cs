@@ -9,6 +9,8 @@ public class NotificationResponseDto
 
 public class Notifications
 {
+    public Guid Id { get; set; }
+    
     public string SentByUser { get; set; }
     
     public string? SentImageUrl { get; set; }

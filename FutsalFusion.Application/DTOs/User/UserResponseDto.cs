@@ -12,6 +12,8 @@ public class UserResponseDto
     
     public string ImageURL { get; set; }
     
+    public bool IsActive { get; set; }
+    
     public string RegisteredDate { get; set; }
     
     public string RoleName { get; set; }

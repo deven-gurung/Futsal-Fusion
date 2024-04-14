@@ -9,6 +9,8 @@ public class FutsalResponseDto
     public bool IsNew { get; set; }
     
     public bool IsPopular { get; set; }
+
+    public bool IsActive { get; set; }
     
     public string FutsalName { get; set; }
     

@@ -1,4 +1,5 @@
-﻿@model List<FutsalFusion.Application.DTOs.Futsal.FutsalGridResponseDto>
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model FutsalFusion.Application.DTOs.Futsal.FutsalGridResponseDto
 
 @{
     ViewData["Title"] = "Futsal Overview";
@@ -26,15 +27,19 @@
                     <a asp-action="Register" class="btn btn-danger rounded-pill mb-3">
                         <i class="mdi mdi-plus"></i> Futsal Registration
                     </a>
+                    <a asp-action="DownloadSheet" class="btn btn-dark rounded-pill ms-2 mb-3">
+                        <i class="mdi mdi-file-excel"></i> Export to Excel
+                    </a>
                 </div>
                 <div class="col-sm-8">
                     <div class="text-sm-end">
                         <div class="btn-group mb-3">
-                            <button type="button" class="btn btn-primary">All</button>
+                            <a asp-action="Index" asp-route-type="All" type="button" class="btn @(Model.Selection == "All" ? "btn-primary" : "btn-light")">All</a>
                         </div>
                         <div class="btn-group mb-3 ms-1">
-                            <button type="button" class="btn btn-light">Exotic</button>
-                            <button type="button" class="btn btn-light">Popular</button>
+                            <a asp-action="Index" asp-route-type="Exotic" type="button" class="btn @(Model.Selection == "Exotic" ? "btn-primary" : "btn-light")">Exotic</a>
+                            <a asp-action="Index" asp-route-type="Popular" type="button" class="btn @(Model.Selection == "Popular" ? "btn-primary" : "btn-light")">Popular</a>
+                            <a asp-action="Index" asp-route-type="Inactive" type="button" class="btn @(Model.Selection == "Inactive" ? "btn-primary" : "btn-danger")">In Active</a>
                         </div>
                         <div class="btn-group mb-3 ms-2 d-none d-sm-inline-block">
                             <button type="button" class="btn btn-secondary"><i class="ri-function-line"></i></button>
@@ -73,7 +78,7 @@
                         </div> 
                     </div> 
                 </div> 
-                @foreach (var item in Model)
+                @foreach (var item in Model.FutsalDetails)
                 {
                     <div class="col-md-6 col-xxl-3">
                         <div class="card d-block">

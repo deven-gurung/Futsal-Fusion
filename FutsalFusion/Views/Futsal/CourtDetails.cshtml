@@ -275,7 +275,7 @@
                     data: JSON.stringify(data),
                     contentType: 'application/json',
                     success: function(data) {
-                        commonMessage('success', "Your appointment has been successfully booked.");
+                        location.reload();
                     },
                     error: function(xhr, status, error) {
                         console.log(xhr);

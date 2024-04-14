@@ -55,6 +55,13 @@ public class AccountController : Controller
 
         if (user != null)
         {
+            if (!user.IsActive)
+            {
+                TempData["Warning"] = "You are currently inactive, please contact your administrator to verify the issue.";
+        
+                return View(new LoginRequestDto());
+            }
+
             var isValid = Password.VerifyPassword(login.Password, user.Password, Password.PasswordSalt);
 
             if (isValid)
@@ -301,6 +308,7 @@ public class AccountController : Controller
             Username = x.UserName,
             ImageURL = x.ImageURL ?? "sample-profile.png",
             EmailAddress = x.EmailAddress,
+            IsActive = x.IsActive,
             RoleName = _genericRepository.GetById<AppRole>(x.RoleId).Name,
             RegisteredDate = x.CreatedAt.ToString("dd-MM-yyyy")
         }).ToList();
@@ -324,6 +332,20 @@ public class AccountController : Controller
         return View();
     }
 
+    [HttpGet]
+    public IActionResult LockUnlockUser(Guid userId)
+    {
+        var user = _genericRepository.GetById<AppUser>(userId);
+
+        user.IsActive = !user.IsActive;
+        
+        _genericRepository.Update(user);
+
+        TempData["Success"] = "The activation status of the selected user has been successfully changed.";
+        
+        return RedirectToAction("UsersList");
+    }
+    
     [HttpGet]
     public IActionResult GetRoleRights(Guid roleId)
     {
