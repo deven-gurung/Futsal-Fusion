@@ -1,4 +1,10 @@
-﻿<div class="content-page">
+﻿@model FutsalFusion.Application.DTOs.Account.ProfileDetailsDto
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="content-page">
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -18,10 +24,9 @@
                 <div class="col-xl-4 col-lg-5">
                     <div class="card text-center">
                         <div class="card-body">
-                            <img src="~/user-images/super-admin.jpg" class="rounded-circle avatar-lg img-thumbnail" alt="profile-image">
-
-                            <h4 class="mb-0 mt-2">Dominic Keller</h4>
-                            <p class="text-muted font-14">Founder</p>
+                            <img src="~/user-images/@Model.ImageUrl" class="rounded-circle avatar-lg img-thumbnail" alt="profile-image">
+                            <h4 class="mb-0 mt-2">@Model.Name</h4>
+                            <p class="text-muted font-14">@Model.Role</p>
 
                             <button type="button" class="btn btn-success btn-sm mb-2">Follow</button>
                             <button type="button" class="btn btn-danger btn-sm mb-2">Message</button>
@@ -31,10 +36,10 @@
                                 <p class="text-muted font-13 mb-3">
                                     Hi I'm Dominic Keller,has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.
                                 </p>
-                                <p class="text-muted mb-2 font-13"><strong>Full Name :</strong> <span class="ms-2">Geneva D. McKnight</span></p>
-                                <p class="text-muted mb-2 font-13"><strong>Mobile :</strong><span class="ms-2">(977) 98 0000</span></p>
-                                <p class="text-muted mb-2 font-13"><strong>Email :</strong> <span class="ms-2 ">user@email.domain</span></p>
-                                <p class="text-muted mb-1 font-13"><strong>Location :</strong> <span class="ms-2">Nepal</span></p>
+                                <p class="text-muted mb-2 font-13"><strong>Full Name :</strong> <span class="ms-2">@Model.Name</span></p>
+                                <p class="text-muted mb-2 font-13"><strong>Mobile :</strong><span class="ms-2">(+977) @Model.Mobile</span></p>
+                                <p class="text-muted mb-2 font-13"><strong>Email :</strong> <span class="ms-2 ">@Model.EmailAddress</span></p>
+                                <p class="text-muted mb-1 font-13"><strong>Location :</strong> <span class="ms-2">@Model.Location</span></p>
                             </div>
 
                             <ul class="social-list list-inline mt-3 mb-0">
@@ -53,21 +58,75 @@
                             </ul>
                         </div> 
                     </div> 
+                </div>
+                <div class="col-xl-8 col-lg-7">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h4 class="header-title">Messages</h4>
-                                <div class="dropdown">
-                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="mdi mdi-dots-vertical"></i>
+                            <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                                <li class="nav-item">
+                                    <a href="#team" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0 active">
+                                        Team Members
                                     </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="javascript:void(0);" class="dropdown-item">Settings</a>
-                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#assign" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                        Assign Members
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane show active" id="team">
+                                    <h5 class="mb-3 mt-4 text-uppercase"><i class="mdi mdi-cards-variant me-1"></i>
+                                        Played Team Members</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless table-nowrap mb-0">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Team Member</th>
+                                                <th>Phone Number</th>
+                                                <th>Friends Since</th>
+                                                <th>Shared Booking Slots</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach (var item in Model.TeamMembers)
+                                            {
+                                                <tr>
+                                                    <td>@(Model.TeamMembers.IndexOf(item) + 1).</td>
+                                                    <td><img src="~/user-images/@item.ImageUrl" alt="table-user" class="me-2 rounded-circle" height="24">@item.Name</td>
+                                                    <td>(+977) @item.PhoneNumber</td>
+                                                    <td>@item.FriendsSince</td>
+                                                    <td>@item.SharedBookingSlots</td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                            </div>
-                        </div> 
+                                <div class="tab-pane" id="assign">
+                                    <h5 class="mb-3 mt-4 text-uppercase">
+                                        <i class="mdi mdi-account-search me-1"></i>
+                                        Find a New Member
+                                    </h5>
+                                    <form asp-action="AssignMembers">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Assigned Members</label>
+                                                    <input asp-for="@Model.FriendsRequest.PlayerId" type="hidden"/>
+                                                    <select class="select2 form-control select2-multiple" asp-items="@ViewBag.ddlUsers" data-toggle="select2" multiple="multiple" data-placeholder="Select Team Member(s)" asp-for="@Model.FriendsRequest.RequestedPlayers">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 text-end">
+                                                <button class="btn btn-success">Save</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div> 
+                        </div>
                     </div> 
                 </div>
             </div>

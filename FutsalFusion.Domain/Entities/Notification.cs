@@ -20,8 +20,8 @@ public class Notification : BaseEntity<Guid>
 	public bool IsSeen { get; set; } = false;
 
 	[ForeignKey("SenderId")]
-	public virtual AppUser Sender { get; set; }
+	public virtual AppUser? Sender { get; set; }
 
 	[ForeignKey("ReceiverId")]
-	public virtual AppUser Receiver { get; set; }
+	public virtual AppUser? Receiver { get; set; }
 }

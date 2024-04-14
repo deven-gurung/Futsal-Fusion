@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Reflection.Emit;
 using FutsalFusion.Domain.Entities;
 using FutsalFusion.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -32,6 +33,8 @@ public sealed class ApplicationDbContext : DbContext
     public DbSet<Appointment> Appointments { get; set; }
     
     public DbSet<AppointmentDetail> AppointmentDetails { get; set; }
+
+    public DbSet<AppointmentRequest> AppointmentRequests { get; set; }
     
     public DbSet<AppRole> AppRoles { get; set; }
 
@@ -58,6 +61,8 @@ public sealed class ApplicationDbContext : DbContext
     public DbSet<OrderDetail> OrderDetails { get; set; }
 
     public DbSet<RoleRights> RoleRights { get; set; }
+
+    public DbSet<Team> Teams { get; set; }
     
     public DbSet<WorkingHours> WorkingHours { get; set; }
     #endregion
@@ -94,5 +99,35 @@ public sealed class ApplicationDbContext : DbContext
             .WithMany(u => u.AppointmentDetails)
             .HasForeignKey(ad => ad.PlayerId)
             .OnDelete(DeleteBehavior.Restrict);
-    }
+
+		builder.Entity<Notification>(entity =>
+		{
+			entity.HasOne(n => n.Sender)
+				.WithMany(u => u.SentNotifications)
+				.HasForeignKey(n => n.SenderId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			entity.HasOne(n => n.Receiver)
+				.WithMany(u => u.ReceivedNotifications)
+				.HasForeignKey(n => n.ReceiverId)
+				.OnDelete(DeleteBehavior.Restrict);
+		});
+
+		builder.Entity<AppUser>(entity =>
+		{
+			entity.HasMany(u => u.SentNotifications)
+				.WithOne(n => n.Sender)
+				.HasForeignKey(n => n.SenderId);
+
+			entity.HasMany(u => u.ReceivedNotifications)
+				.WithOne(n => n.Receiver)
+				.HasForeignKey(n => n.ReceiverId);
+		});
+
+		builder.Entity<Team>()
+	        .HasOne<AppUser>(s => s.Player)
+	        .WithMany(g => g.Teams)
+	        .HasForeignKey(s => s.PlayerId)
+	        .OnDelete(DeleteBehavior.Restrict);
+	}
 }

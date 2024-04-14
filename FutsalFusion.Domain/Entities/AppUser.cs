@@ -25,4 +25,10 @@ public class AppUser : BaseEntity<Guid>
     public List<Appointment> Appointments { get; set; }
 
     public List<AppointmentDetail> AppointmentDetails { get; set; }
+
+    public List<Notification> SentNotifications { get; set; }
+
+    public List<Notification> ReceivedNotifications { get; set; }
+
+	public virtual List<Team> Teams { get; set; }
 }

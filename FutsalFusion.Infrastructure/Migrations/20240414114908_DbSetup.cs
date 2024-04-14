@@ -176,6 +176,12 @@ namespace FutsalFusion.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Notifications", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Notifications_AppUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Notifications_AppUsers_SenderId",
                         column: x => x.SenderId,
                         principalTable: "AppUsers",
@@ -217,6 +223,45 @@ namespace FutsalFusion.Infrastructure.Migrations
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Teams",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AssigneeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teams", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teams_AppUsers_AssigneeId",
+                        column: x => x.AssigneeId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Teams_AppUsers_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Teams_Teams_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "Teams",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -507,6 +552,33 @@ namespace FutsalFusion.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AppointmentRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequestedPlayers = table.Column<int>(type: "int", nullable: false),
+                    AppointmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppointmentRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppointmentRequests_Appointments_AppointmentId",
+                        column: x => x.AppointmentId,
+                        principalTable: "Appointments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AppointmentDetails_AppointmentId",
                 table: "AppointmentDetails",
@@ -516,6 +588,11 @@ namespace FutsalFusion.Infrastructure.Migrations
                 name: "IX_AppointmentDetails_PlayerId",
                 table: "AppointmentDetails",
                 column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppointmentRequests_AppointmentId",
+                table: "AppointmentRequests",
+                column: "AppointmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_BookedCourtId",
@@ -563,6 +640,11 @@ namespace FutsalFusion.Infrastructure.Migrations
                 column: "FutsalId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Notifications_ReceiverId",
+                table: "Notifications",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Notifications_SenderId",
                 table: "Notifications",
                 column: "SenderId");
@@ -593,6 +675,21 @@ namespace FutsalFusion.Infrastructure.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Teams_AssigneeId",
+                table: "Teams",
+                column: "AssigneeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teams_PlayerId",
+                table: "Teams",
+                column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teams_TeamId",
+                table: "Teams",
+                column: "TeamId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WorkingHours_FutsalId",
                 table: "WorkingHours",
                 column: "FutsalId");
@@ -603,6 +700,9 @@ namespace FutsalFusion.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AppointmentDetails");
+
+            migrationBuilder.DropTable(
+                name: "AppointmentRequests");
 
             migrationBuilder.DropTable(
                 name: "CourtImages");
@@ -621,6 +721,9 @@ namespace FutsalFusion.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoleRights");
+
+            migrationBuilder.DropTable(
+                name: "Teams");
 
             migrationBuilder.DropTable(
                 name: "WorkingHours");

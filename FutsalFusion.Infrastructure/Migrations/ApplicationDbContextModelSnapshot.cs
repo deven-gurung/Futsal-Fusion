@@ -251,6 +251,49 @@ namespace FutsalFusion.Infrastructure.Migrations
                     b.ToTable("AppointmentDetails");
                 });
 
+            modelBuilder.Entity("FutsalFusion.Domain.Entities.AppointmentRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AppointmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RequestedPlayers")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.ToTable("AppointmentRequests");
+                });
+
             modelBuilder.Entity("FutsalFusion.Domain.Entities.Court", b =>
                 {
                     b.Property<Guid>("Id")
@@ -672,6 +715,8 @@ namespace FutsalFusion.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ReceiverId");
+
                     b.HasIndex("SenderId");
 
                     b.ToTable("Notifications");
@@ -844,6 +889,56 @@ namespace FutsalFusion.Infrastructure.Migrations
                     b.ToTable("RoleRights");
                 });
 
+            modelBuilder.Entity("FutsalFusion.Domain.Entities.Team", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AssigneeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlayerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssigneeId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Teams");
+                });
+
             modelBuilder.Entity("FutsalFusion.Domain.Entities.WorkingHours", b =>
                 {
                     b.Property<Guid>("Id")
@@ -942,6 +1037,17 @@ namespace FutsalFusion.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FutsalFusion.Domain.Entities.AppointmentRequest", b =>
+                {
+                    b.HasOne("FutsalFusion.Domain.Entities.Appointment", "Appointment")
+                        .WithMany()
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+                });
+
             modelBuilder.Entity("FutsalFusion.Domain.Entities.Court", b =>
                 {
                     b.HasOne("FutsalFusion.Domain.Entities.Futsal", "Futsal")
@@ -1011,7 +1117,13 @@ namespace FutsalFusion.Infrastructure.Migrations
             modelBuilder.Entity("FutsalFusion.Domain.Entities.Notification", b =>
                 {
                     b.HasOne("FutsalFusion.Domain.Entities.AppUser", "Receiver")
-                        .WithMany()
+                        .WithMany("ReceivedNotifications")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FutsalFusion.Domain.Entities.AppUser", "Sender")
+                        .WithMany("SentNotifications")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1070,6 +1182,29 @@ namespace FutsalFusion.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("FutsalFusion.Domain.Entities.Team", b =>
+                {
+                    b.HasOne("FutsalFusion.Domain.Entities.AppUser", "Assignee")
+                        .WithMany()
+                        .HasForeignKey("AssigneeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FutsalFusion.Domain.Entities.AppUser", "Player")
+                        .WithMany("Teams")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FutsalFusion.Domain.Entities.Team", null)
+                        .WithMany("Teams")
+                        .HasForeignKey("TeamId");
+
+                    b.Navigation("Assignee");
+
+                    b.Navigation("Player");
+                });
+
             modelBuilder.Entity("FutsalFusion.Domain.Entities.WorkingHours", b =>
                 {
                     b.HasOne("FutsalFusion.Domain.Entities.Futsal", "Futsal")
@@ -1086,11 +1221,22 @@ namespace FutsalFusion.Infrastructure.Migrations
                     b.Navigation("AppointmentDetails");
 
                     b.Navigation("Appointments");
+
+                    b.Navigation("ReceivedNotifications");
+
+                    b.Navigation("SentNotifications");
+
+                    b.Navigation("Teams");
                 });
 
             modelBuilder.Entity("FutsalFusion.Domain.Entities.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("FutsalFusion.Domain.Entities.Team", b =>
+                {
+                    b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618
         }

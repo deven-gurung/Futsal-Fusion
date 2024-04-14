@@ -9,6 +9,7 @@ public class SharedControllers
         "profile",
         "password",
         "appointment",
-        "notification"
+        "notification",
+        "profile"
     ];
 }
