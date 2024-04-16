@@ -58,7 +58,7 @@ public class ProfileController : BaseController<ProfileController>
     
             // Get appointment details where the appointment IDs match those created by the assigned user or the current user
             var appointmentIds = appointments.Select(z => z.Id);
-            var appointmentDetails = _genericRepository.Get<AppointmentDetail>(x => appointmentIds.Contains(x.Id) && (x.PlayerId == assignedUser.Id || x.PlayerId == user.Id)).ToList();
+            var appointmentDetails = _genericRepository.Get<AppointmentDetail>(x => appointmentIds.Contains(x.AppointmentId) && (x.PlayerId == assignedUser.Id || x.PlayerId == user.Id)).ToList();
 
             // Further fetch appointment IDs from the details
             var detailedAppointmentIds = appointmentDetails.Select(x => x.AppointmentId).ToList();
@@ -107,7 +107,7 @@ public class ProfileController : BaseController<ProfileController>
     {
         var assignedMembers = profileDetails.FriendsRequest;
 
-        var assignees = assignedMembers.RequestedPlayers.Split(",");
+        var assignees = assignedMembers.RequestedPlayers;
 
         foreach (var assignee in assignees)
         {

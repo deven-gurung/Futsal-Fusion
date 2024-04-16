@@ -24,12 +24,15 @@
 
             <div class="row mb-2">
                 <div class="col-sm-4">
-                    <a asp-action="Register" class="btn btn-danger rounded-pill mb-3">
-                        <i class="mdi mdi-plus"></i> Futsal Registration
-                    </a>
-                    <a asp-action="DownloadSheet" class="btn btn-dark rounded-pill ms-2 mb-3">
-                        <i class="mdi mdi-file-excel"></i> Export to Excel
-                    </a>
+                    @if (Model.IsAdmin)
+                    {
+                        <a asp-action="Register" class="btn btn-danger rounded-pill mb-3">
+                            <i class="mdi mdi-plus"></i> Futsal Registration
+                        </a>
+                        <a asp-action="DownloadSheet" class="btn btn-dark rounded-pill ms-2 mb-3">
+                            <i class="mdi mdi-file-excel"></i> Export to Excel
+                        </a>
+                    }
                 </div>
                 <div class="col-sm-8">
                     <div class="text-sm-end">

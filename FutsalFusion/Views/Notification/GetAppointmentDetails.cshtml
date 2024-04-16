@@ -1,0 +1,153 @@
+﻿@model FutsalFusion.Application.DTOs.Notification.AppointmentNotificationDto
+
+@{
+    ViewData["Title"] = "Appointment Request";
+}
+
+<link href="~/css/reservation.css" rel="stylesheet" />
+
+<div class="wrapper">
+    <div class="content-page">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Fusion</a></li>
+                                    <li class="breadcrumb-item">Appointments & Reservations</li>
+                                    <li class="breadcrumb-item active">Requested Reservation Details</li>
+                                </ol>
+                            </div>
+                            <h4 class="page-title">Appointment Request Details</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="accordion" class="acoodion-child-d">
+                            <div class="card">
+                                <div class="card-header ">
+                                    <h4 class="mb-0 mt-0">Reservation Detail</h4>
+                                    <span>Date of Booking <b>@Model.BookedDate</b> </span>
+                                    <a class="btn" data-bs-toggle="collapse" href="#collapseOne">
+                                        <i class="ri-arrow-up-s-line"></i>
+                                    </a>
+                                </div>
+                                <div id="collapseOne" class="collapse show" data-bs-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="row child-rw">
+                                            <div class="col-md-3 mb-3">
+                                                <div class="form-child-gp">
+                                                    <label class="form-label">Organized By / Player Name</label>
+                                                    <h5>@Model.OrganizedBy</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <div class="form-child-gp">
+                                                    <label class="form-label">Futsal Name</label>
+                                                    <h5>@Model.FutsalName</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <div class="form-child-gp">
+                                                    <label class="form-label">Court Name</label>
+                                                    <h5>@Model.CourtName</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <div class="form-child-gp">
+                                                    <label class="form-label">Type</label>
+                                                    <h5>@Model.CourtType</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <div class="form-child-gp">
+                                                    <label class="form-label">Booked Date</label>
+                                                    <h5>@Model.BookedDate</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-child-gp">
+                                                    <label class="form-label">Appointed Date</label>
+                                                    <h5>@Model.AppointedDate</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-child-gp">
+                                                    <label class="form-label">Time Slots</label>
+                                                    <h5>@Model.TimeSlot</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-child-gp">
+                                                    <label class="form-label">Has Requested Any Players</label>
+                                                    <h5>
+                                                        <span class="badge bg-success">Yes</span>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-child-gp bg-gnt-orange px-2 py-1">
+                                                    <label class="form-label">Total Number of Players</label>
+                                                    <h5><b>@Model.AssignedPlayersList.Count(x => x.IsSelected)</b></h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-child-gp bg-gnt-orange px-2 py-1">
+                                                    <label class="form-label">Requested Players</label>
+                                                    <h5><b>@Model.NumberOfPlayers</b></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="mb-2">Team Members Selection</h4>
+                        <div class="card">
+                            <div class="card-body">
+                                <input asp-for="AppointmentId" type="hidden"/>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 8%">#</th>
+                                        <th scope="col" style="width: 15%">Is Involved?</th>
+                                        <th scope="col">Phone Number</th>
+                                        <th scope="col">Player Name</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for (int i = 0; i < Model.AssignedPlayersList.Count; i++)
+                                    {
+                                        var player = Model.AssignedPlayersList[i];
+                                        <tr>
+                                            <input asp-for="@Model.AssignedPlayersList[i].PlayerId" type="hidden"/>
+                                            <td>
+                                                <span>@(i + 1).</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" checked="checked" disabled="disabled" id="is_selected_@player.PlayerId" asp-for="@Model.AssignedPlayersList[i].IsSelected">
+                                                    <label class="form-check-label" for="is_selected_@player.PlayerId"></label>
+                                                </div>
+                                            </td>
+                                            <td>(+977) @player.PhoneNumber</td>
+                                            <td>@player.PlayerName</td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                                <div class="col-12 text-end">
+                                    <a asp-action="ApproveDisregardAppointmentRequest" asp-route-appointmentId="@Model.AppointmentId" asp-route-isApproved="false" class="btn btn-danger" type="submit">Reject</a>
+                                    <a asp-action="ApproveDisregardAppointmentRequest" asp-route-appointmentId="@Model.AppointmentId" asp-route-isApproved="true" class="btn btn-success" type="submit">Accept</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+    </div>
+</div>

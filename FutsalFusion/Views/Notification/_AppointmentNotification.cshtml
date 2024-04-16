@@ -1,0 +1,121 @@
+﻿@model FutsalFusion.Application.DTOs.Notification.AppointmentNotificationDto
+
+<div id="appointment-details-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="appointment-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-dark">
+                <h4 class="modal-title text-white" id="appointment-modal-label">Appointment Request</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div id="accordion" class="acoodion-child-d">
+                        <div class="card">
+                            <div class="card-header ">
+                                <h4 class="mb-0 mt-0">Reservation Detail</h4>
+                                <span>Date of Booking <b>@Model.BookedDate</b> </span>
+                                <a class="btn" data-bs-toggle="collapse" href="#collapseOne">
+                                    <i class="ri-arrow-up-s-line"></i>
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="collapse show" data-bs-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="row child-rw">
+                                        <div class="col-md-3 mb-3">
+                                            <div class="form-child-gp">
+                                                <label class="form-label">Organizer / Player Name</label>
+                                                <h5>@Model.OrganizedBy</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <div class="form-child-gp">
+                                                <label class="form-label">Futsal Name</label>
+                                                <h5>@Model.FutsalName</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <div class="form-child-gp">
+                                                <label class="form-label">Court Name</label>
+                                                <h5>@Model.CourtName</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <div class="form-child-gp">
+                                                <label class="form-label">Type</label>
+                                                <h5>@Model.CourtType</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <div class="form-child-gp">
+                                                <label class="form-label">Booked Date</label>
+                                                <h5>@Model.BookedDate</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-child-gp">
+                                                <label class="form-label">Appointed Date</label>
+                                                <h5>@Model.AppointedDate</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-child-gp">
+                                                <label class="form-label">Time Slots</label>
+                                                <h5>@Model.TimeSlot</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-child-gp">
+                                                <label class="form-label">Confirmed Number of Players</label>
+                                                <h5>
+                                                    <span class="badge bg-success">@Model.ConfirmedPlayers</span>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-child-gp bg-gnt-orange px-2 py-1">
+                                                <label class="form-label">Total Number of Players</label>
+                                                <h5><b>@Model.AssignedPlayersList.Count(x => x.IsSelected)</b></h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-child-gp bg-gnt-orange px-2 py-1">
+                                                <label class="form-label">Requested Players</label>
+                                                <h5><b>@Model.NumberOfPlayers</b></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <h4 class="mb-2">Team Members Selection</h4>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="width: 8%">#</th>
+                            <th scope="col">Phone Number</th>
+                            <th scope="col">Player Name</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @for (int i = 0; i < Model.AssignedPlayersList.Count; i++)
+                        {
+                            var player = Model.AssignedPlayersList[i];
+                            <tr>
+                                <input asp-for="@Model.AssignedPlayersList[i].PlayerId" type="hidden"/>
+                                <td>
+                                    <span>@(i + 1).</span>
+                                </td>
+                                <td>(+977) @player.PhoneNumber</td>
+                                <td>@player.PlayerName</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

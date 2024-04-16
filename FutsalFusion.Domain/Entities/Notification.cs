@@ -18,6 +18,8 @@ public class Notification : BaseEntity<Guid>
 	public int ReceiverEntity { get; set; }
 	
 	public bool IsSeen { get; set; } = false;
+	
+	public Guid? AppointmentId { get; set; }
 
 	[ForeignKey("SenderId")]
 	public virtual AppUser? Sender { get; set; }

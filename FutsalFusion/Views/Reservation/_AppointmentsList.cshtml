@@ -163,6 +163,7 @@
                     <th>Payment Status</th>
                     <th>Action Done By</th>
                     <th>Action Done On</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -196,6 +197,11 @@
                         </td>
                         <td>@item.ActionDoneUser</td>
                         <td>@item.ActionDoneDate</td>
+                        <td>
+                            <a asp-action="ApprovedAppointmentsDetails" asp-route-appointmentId="@item.AppointmentId">
+                                <i class="ri-user-star-line"></i>
+                            </a>
+                        </td>
                     </tr>
                 }
                 </tbody>

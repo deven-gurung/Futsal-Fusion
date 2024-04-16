@@ -115,12 +115,12 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Assigned Members</label>
                                                     <input asp-for="@Model.FriendsRequest.PlayerId" type="hidden"/>
-                                                    <select class="select2 form-control select2-multiple" asp-items="@ViewBag.ddlUsers" data-toggle="select2" multiple="multiple" data-placeholder="Select Team Member(s)" asp-for="@Model.FriendsRequest.RequestedPlayers">
+                                                    <select id="requestedPlayers" asp-for="@Model.FriendsRequest.RequestedPlayers" asp-items="@ViewBag.ddlUsers" class="select2 form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Select Team Member(s)">
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-12 text-end">
-                                                <button class="btn btn-success">Save</button>
+                                                <button onclick="printValues()" class="btn btn-success">Save</button>
                                             </div>
                                         </div>
                                     </form>
@@ -133,3 +133,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    function printValues(){
+        console.log($("#requestedPlayers").val());
+    }
+</script>

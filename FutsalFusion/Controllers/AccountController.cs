@@ -218,6 +218,12 @@ public class AccountController : Controller
     [AllowAnonymous]
     public IActionResult ForgetPassword()
     {
+        var captcha = GenerateAlphanumericCaseSensitiveCaptcha(6);
+            
+        ViewData["Captcha"] = captcha;
+        
+        HttpContext.Session.SetString("Captcha", captcha);
+        
         return View();
     }
 
@@ -438,6 +444,142 @@ public class AccountController : Controller
         });
     }
     
+    [HttpPost]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordRequestDto forgotPassword, string buttonType)
+    {
+        switch (buttonType)
+        {
+            case "OTP":
+            {
+                var captcha = HttpContext.Session.GetString("Captcha") ?? "";
+        
+                if (forgotPassword.Captcha != captcha)
+                {
+                    return Json(new
+                    {
+                        errorType = -1,
+                        errorMessage = "Invalid captcha, please try again."
+                    });
+                }
+                
+                var userExists = _genericRepository.Exists<AppUser>(x => x.EmailAddress == forgotPassword.EmailAddress);
+                
+                if (userExists)
+                {
+                    // var otp = ExtensionMethod.GenerateOTP();
+                    
+                    var otp = "8VsfrT";
+
+                    HttpContext.Session.SetComplexData("OTP", otp);
+                    
+                    forgotPassword.OTP = otp;
+                    
+                    // await _accountService.SendOTP(forgotPassword, MailProcess.OneTimePassword);
+                    
+                    return Json(new
+                    {
+                        successType = 1,
+                        successMessage = "An email has been triggered with an OTP on your email, please check and fill the below details."
+                    });
+                }
+
+                return Json(new
+                {
+                    errorType = -1,
+                    errorMessage = "User with the following email address does not exist, please try again with a valid email address."
+                });
+            }
+            case "ResendOTP":
+            {
+                var userExists = _genericRepository.Exists<AppUser>(x => x.EmailAddress == forgotPassword.EmailAddress);
+                
+                if (userExists)
+                {
+                    // var otp = ExtensionMethod.GenerateOTP();
+                    
+                    var otp = "8VsfrT";
+                    
+                    HttpContext.Session.SetComplexData("OTP", otp);
+                    
+                    forgotPassword.OTP = otp;
+                    
+                    // await _accountService.SendOTP(forgotPassword, MailProcess.OneTimePassword);
+                    
+                    return Json(new
+                    {
+                        successType = 1,
+                        successMessage = "An email has been triggered with an OTP on your email, please check and fill the below details."
+                    });
+                }
+
+                return Json(new
+                {
+                    errorType = -1,
+                    errorMessage = "User with the following email address does not exist, please try again with a valid email address."
+                });
+            }
+            case "VerifyOTP":
+            {
+                if (!string.IsNullOrEmpty(HttpContext.Session.GetComplexData<string>("OTP")))
+                {
+                    var otpValue = Convert.ToString(HttpContext.Session.GetComplexData<string>("OTP"));
+
+                    switch (string.IsNullOrEmpty(forgotPassword.OTP))
+                    {
+                        case false when otpValue == forgotPassword.OTP:
+                            return Json(new
+                            {
+                                successType = 2,
+                                successMessage = "Your OTP matches with the provided OTP, please click on the below allocated button to reset your password."
+                            });
+                        
+                        case false when otpValue != forgotPassword.OTP:
+                            return Json(new
+                            {
+                                errorType = -1,
+                                errorMessage = "Your OTP does not matches with the provided OTP, please provide a correct OTP or click to resent a OTP."
+                            });
+                    }
+                }
+    
+                break;
+            }
+            case "Reset":
+            {
+                var user = _genericRepository.GetFirstOrDefault<AppUser>(x => x.EmailAddress == forgotPassword.EmailAddress);
+
+                if (user == null)
+                {
+                    return Json(new
+                    {
+                        errorType = -1,
+                        errorMessage = "User with the following email address does not exist, please try again with a valid email address."
+                    });
+                }
+        
+                user.Password = Password.CreatePasswordHash(Constants.Passwords.UserPassword, Password.CreateSalt(Password.PasswordSalt));
+
+                _genericRepository.Update(user);
+                
+                HttpContext.Session.Remove("OTP");
+
+                TempData["Success"] = "Your password has been successfully reset, please log in to access the system from the password sent at your email.";
+                
+                return Json(new
+                {
+                    successType = 3,
+                    successMessage = "Your password has been successfully reset, please log in to access the system from the password sent at your email."
+                });
+            }
+        }
+        
+        return Json(new
+        {
+            errorType = -1,
+            errorMessage = "Invalid process, please try again."
+        });
+    }
+    
     private string ConvertViewToString<TModel>(string viewName, TModel model, bool partial = false)
     {
         if (string.IsNullOrEmpty(viewName))
@@ -472,5 +614,29 @@ public class AccountController : Controller
         viewResult.View.RenderAsync(viewContext);
 
         return writer.ToString();
+    }
+    
+    private string GenerateAlphanumericCaseSensitiveCaptcha(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+
+    [HttpGet]
+    public IActionResult ResetCaptcha()
+    {
+        var captcha = GenerateAlphanumericCaseSensitiveCaptcha(6);
+            
+        ViewData["Captcha"] = captcha;
+        
+        HttpContext.Session.SetString("Captcha", captcha);
+
+        return Json(new
+        {
+            data = captcha
+        });
     }
 }

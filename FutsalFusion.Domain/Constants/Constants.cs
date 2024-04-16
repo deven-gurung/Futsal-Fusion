@@ -13,6 +13,7 @@ public class Constants
     {
         public const string AdminPassword = "radi0V!oleta";
         public const string FutsalPassword = "radi0V!oleta";
+        public const string UserPassword = "radi0V!oleta";
     }
     
     public class FilePath

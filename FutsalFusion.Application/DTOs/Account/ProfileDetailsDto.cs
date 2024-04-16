@@ -40,5 +40,5 @@ public class FriendsRequest
 {
     public Guid PlayerId { get; set; }
     
-    public string RequestedPlayers { get; set; }
+    public List<string> RequestedPlayers { get; set; }
 }

@@ -3,6 +3,8 @@
 public class FutsalGridResponseDto
 {
     public string Selection { get; set; }
+    
+    public bool IsAdmin { get; set; }
 
     public List<FutsalDetails> FutsalDetails { get; set; }
 }

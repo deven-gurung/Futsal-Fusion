@@ -58,9 +58,12 @@ public class FutsalController : BaseController<FutsalController>
             _ => futsalDetailsList.Where(x => x.IsActive).ToList()
         };
 
+        var adminRole = _genericRepository.GetFirstOrDefault<AppRole>(x => x.Name == "Admin");
+        
         var result = new FutsalGridResponseDto()
         {
             Selection = type ?? "All",
+            IsAdmin = UserDetail.RoleId == adminRole?.Id,
             FutsalDetails = futsalDetails
         };
         

@@ -19,5 +19,7 @@ public class Notifications
     
     public string Content { get; set; }
     
+    public Guid? AppointmentId { get; set; }
+    
     public bool IsSeen { get; set; }
 }
