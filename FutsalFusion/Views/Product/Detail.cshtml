@@ -1,4 +1,11 @@
-﻿<div class="content-page">
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model FutsalFusion.Application.DTOs.Product.ProductDetailsDto
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="content-page">
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -21,59 +28,59 @@
                             <div class="row">
                                 <div class="col-lg-5">
                                     <a href="javascript: void(0);" class="text-center d-block mb-4">
-                                        <img src="~/assets/images/products/product-5.jpg" class="img-fluid" style="max-width: 280px;" alt="Product-img" />
+                                        <img src="~/kit-images/@Model.ImageUrl" class="img-fluid" style="max-width: 280px;" alt="Product-img" />
                                     </a>
                                 </div> 
                                 <div class="col-lg-7">
-                                    <form class="ps-lg-4">
-                                        <h3 class="mt-0">Amazing GK Glove (Orange) <a href="javascript: void(0);" class="text-muted"><i class="mdi mdi-square-edit-outline ms-2"></i></a> </h3>
-                                        <p class="mb-1">Added Date: 09/12/2023</p>
-                                        <p class="font-16">
-                                            <span class="text-warning mdi mdi-star"></span>
-                                            <span class="text-warning mdi mdi-star"></span>
-                                            <span class="text-warning mdi mdi-star"></span>
-                                            <span class="text-warning mdi mdi-star"></span>
-                                            <span class="text-warning mdi mdi-star"></span>
-                                        </p>
+                                    <h3 class="mt-0">@Model.Name <a href="javascript: void(0);" class="text-muted"><i class="mdi mdi-square-edit-outline ms-2"></i></a> </h3>
+                                    <p class="mb-1">Added Date: @Model.Date</p>
+                                    <p class="font-16">
+                                        <span class="text-warning mdi mdi-star"></span>
+                                        <span class="text-warning mdi mdi-star"></span>
+                                        <span class="text-warning mdi mdi-star"></span>
+                                        <span class="text-warning mdi mdi-star"></span>
+                                        <span class="text-warning mdi mdi-star"></span>
+                                    </p>
 
-                                        <div class="mt-3">
-                                            <h4><span class="badge badge-success-lighten">Instock</span></h4>
-                                        </div>
+                                    <div class="mt-3">
+                                        <h4><span class="badge badge-success-lighten">Instock</span></h4>
+                                    </div>
 
-                                        <div class="mt-4">
-                                            <h6 class="font-14">Retail Price:</h6>
-                                            <h3> Rs 250</h3>
-                                        </div>
+                                    <div class="mt-4">
+                                        <h6 class="font-14">Retail Price:</h6>
+                                        <h3> @Model.RetailPrice</h3>
+                                    </div>
 
-                                        <div class="mt-4">
+                                    <div class="mt-4">
+                                        <form asp-action="AddProductsToCart">
                                             <h6 class="font-14">Quantity</h6>
                                             <div class="d-flex">
-                                                <input type="number" min="1" value="1" class="form-control" placeholder="Qty" style="width: 90px;">
-                                                <button type="button" class="btn btn-danger ms-2"><i class="mdi mdi-cart me-1"></i> Add to cart</button>
+                                                <input asp-for="@Model.Id" type="hidden" class="form-control" />
+                                                <input type="number" min="1" asp-for="@Model.Quantity" class="form-control" placeholder="Qty" style="width: 90px;">
+                                                <button type="submit" class="btn btn-danger ms-2"><i class="mdi mdi-cart me-1"></i> Add to cart</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="mt-4">
+                                        <h6 class="font-14">Description:</h6>
+                                        <p>@Html.Raw(Model.Description)</p>
+                                    </div>
+                                    <div class="mt-4">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h6 class="font-14">Available Stock:</h6>
+                                                <p class="text-sm lh-150">@Model.AvailableStock</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6 class="font-14">Number of Orders:</h6>
+                                                <p class="text-sm lh-150">@Model.NumberOfOrders</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6 class="font-14">Revenue:</h6>
+                                                <p class="text-sm lh-150">@Model.Revenue</p>
                                             </div>
                                         </div>
-                                        <div class="mt-4">
-                                            <h6 class="font-14">Description:</h6>
-                                            <p>It is a long established fact that a reader will be distracted by the readable content and quality of this layout glove. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. </p>
-                                        </div>
-
-                                        <div class="mt-4">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <h6 class="font-14">Available Stock:</h6>
-                                                    <p class="text-sm lh-150">2500</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <h6 class="font-14">Number of Orders:</h6>
-                                                    <p class="text-sm lh-150">50</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <h6 class="font-14">Revenue:</h6>
-                                                    <p class="text-sm lh-150">Rs 8,50,000</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
+                                    </div>
                                 </div> 
                             </div> 
                             <div class="table-responsive mt-4">

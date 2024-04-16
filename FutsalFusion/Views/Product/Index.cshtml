@@ -1,4 +1,11 @@
-﻿<div class="wrapper">
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model FutsalFusion.Application.DTOs.Product.ProductResponseDto
+
+@{
+    ViewData["Title"] = "Products & Purchases";
+}
+
+<div class="wrapper">
     <div class="content-page">
         <div class="content">
             <div class="container-fluid">
@@ -11,7 +18,7 @@
                                     <li class="breadcrumb-item active">Products</li>
                                 </ol>
                             </div>
-                            <h4 class="page-title">Products</h4>
+                            <h4 class="page-title">Products & Purchases</h4>
                         </div>
                     </div>
                 </div>
@@ -21,7 +28,12 @@
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="col-sm-5">
-                                        <a href="javascript:void(0);" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-2"></i> Add Products</a>
+                                        @if (Model.IsEditable)
+                                        {
+                                            <a href="javascript:void(0);" class="btn btn-danger mb-2">
+                                                <i class="mdi mdi-plus-circle me-2"></i> Add Products
+                                            </a>
+                                        }
                                     </div>
                                     <div class="col-sm-7">
                                         <div class="text-sm-end">
@@ -47,10 +59,11 @@
                                                 <th>Price</th>
                                                 <th>Quantity</th>
                                                 <th>Status</th>
-                                                <th style="width: 85px;">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        @foreach (var item in Model.ProductDetailsList)
+                                        {
                                             <tr>
                                                 <td>
                                                     <div class="form-check">
@@ -59,9 +72,9 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <img src="~/assets/images/products/product-1.jpg" alt="contact-img" title="contact-img" class="rounded me-3" height="48" />
+                                                    <img src="~/kit-images/@item.ImageURL" alt="contact-img" title="contact-img" class="rounded me-3" height="48"/>
                                                     <p class="m-0 d-inline-block align-middle font-16">
-                                                        <a asp-action="Detail" class="text-body">Modern GK Gloves</a>
+                                                        <a asp-action="Detail" asp-route-productId="@item.Id" class="text-body">@item.Title</a>
                                                         <br/>
                                                         <span class="text-warning mdi mdi-star"></span>
                                                         <span class="text-warning mdi mdi-star"></span>
@@ -71,68 +84,29 @@
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    Gloves
+                                                    @item.Category
                                                 </td>
                                                 <td>
-                                                    09/12/2023
+                                                    @item.RegisteredDate
                                                 </td>
                                                 <td>
-                                                    Rs 150
+                                                    @item.Price
                                                 </td>
                                                 <td>
-                                                    254
+                                                    @item.Quantity
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-success">Active</span>
-                                                </td>
-            
-                                                <td class="table-action">
-                                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                                    @if (item.IsActive)
+                                                    {
+                                                        <span class="badge bg-success">Active</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-warning">In Active</span>
+                                                    }
                                                 </td>
                                             </tr>
-                                            
-                                            <tr>
-                                                <td>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="customCheck3">
-                                                        <label class="form-check-label" for="customCheck3">&nbsp;</label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <img src="~/assets/images/products/product-4.jpg" alt="contact-img" title="contact-img" class="rounded me-3" height="48" />
-                                                    <p class="m-0 d-inline-block align-middle font-16">
-                                                        <a asp-action="Detail" class="text-body">CCNC Football Wears</a>
-                                                        <br/>
-                                                        <span class="text-warning mdi mdi-star"></span>
-                                                        <span class="text-warning mdi mdi-star"></span>
-                                                        <span class="text-warning mdi mdi-star"></span>
-                                                        <span class="text-warning mdi mdi-star"></span>
-                                                        <span class="text-warning mdi mdi-star-half"></span>
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    Kits / Bottles / Accessories
-                                                </td>
-                                                <td>
-                                                    09/08/2024
-                                                </td>
-                                                <td>
-                                                    Rs 250
-                                                </td>
-                                                <td>
-                                                    1,800
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-success">Active</span>
-                                                </td>
-                                                <td class="table-action">
-                                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                                </td>
-                                            </tr>
+                                        }
                                         </tbody>
                                     </table>
                                 </div>

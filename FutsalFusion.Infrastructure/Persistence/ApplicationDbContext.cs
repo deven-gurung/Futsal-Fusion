@@ -40,6 +40,8 @@ public sealed class ApplicationDbContext : DbContext
 
     public DbSet<AppUser> AppUsers { get; set; }
 
+    public DbSet<Cart> Carts { get; set; }
+
     public DbSet<Court> Courts { get; set; }
 
     public DbSet<CourtImage> CourtImages { get; set; }

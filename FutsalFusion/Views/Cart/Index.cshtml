@@ -1,4 +1,10 @@
-﻿<div class="content-page">
+﻿@model FutsalFusion.Application.DTOs.Order.CartRequestDto
+
+@{
+    ViewData["Title"] = "My Carts";
+}
+
+<div class="content-page">
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -32,55 +38,32 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>
-                                                    <img src="~/assets/images/products/product-1.jpg" alt="contact-img"
-                                                         title="contact-img" class="rounded me-3" height="64" />
-                                                    <p class="m-0 d-inline-block align-middle font-16">
-                                                        <a class="text-body">Amazing GK Glove</a>
-                                                        <br>
-                                                        <small class="me-2"><b>Size:</b> Large </small>
-                                                        <small><b>Color:</b> Light Green
-                                                        </small>
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    Rs 500
-                                                </td>
-                                                <td>
-                                                    <input type="number" min="1" value="5" class="form-control" placeholder="Qty" style="width: 90px;">
-                                                </td>
-                                                <td>
-                                                    Rs 7250.30
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="~/assets/images/products/product-2.jpg" alt="contact-img"
-                                                         title="contact-img" class="rounded me-3" height="64" />
-                                                    <p class="m-0 d-inline-block align-middle font-16">
-                                                        <a class="text-body">Biblio Plastic Accessories</a>
-                                                        <br>
-                                                        <small class="me-2"><b>Size:</b> Small </small>
-                                                        <small><b>Color:</b> Brown </small>
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    Rs 990.00
-                                                </td>
-                                                <td>
-                                                    <input type="number" min="1" value="2" class="form-control" placeholder="Qty" style="width: 90px;">
-                                                </td>
-                                                <td>
-                                                    Rs 2080.00
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                                </td>
-                                            </tr>
+                                            @foreach (var item in Model.CartProductsList)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <img src="~/kit-images/@item.ImageUrl" alt="contact-img"
+                                                             title="contact-img" class="rounded me-3" height="64"/>
+                                                        <p class="m-0 d-inline-block align-middle font-16">
+                                                            <a class="text-body">@item.Title</a>
+                                                            <br>
+                                                            <small class="me-2"><b>Added on Cart At:</b> @item.AddedDate </small>
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        Rs @item.UnitPrice
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" min="1" value="@item.Quantity" class="form-control" placeholder="Qty" style="width: 90px;">
+                                                    </td>
+                                                    <td>
+                                                        @item.Price
+                                                    </td>
+                                                    <td>
+                                                        <a asp-action="DeleteItemsOnCart" asp-route-cartId="@item.CartId" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
                                             </tbody>
                                         </table>
                                     </div>
@@ -91,7 +74,7 @@
                                     </div>
                                     <div class="row mt-4">
                                         <div class="col-sm-6">
-                                            <a class="btn text-muted d-none d-sm-inline-block btn-link fw-semibold">
+                                            <a class="btn text-muted d-none d-sm-inline-block btn-link fw-semibold" asp-controller="Product" asp-action="Index">
                                                 <i class="mdi mdi-arrow-left"></i> Continue Shopping </a>
                                         </div>
                                         <div class="col-sm-6">
@@ -109,24 +92,24 @@
                                             <table class="table mb-0">
                                                 <tbody>
                                                 <tr>
-                                                    <td>Grand Total :</td>
-                                                    <td>Rs 1570.00</td>
+                                                    <td>Total Amount:</td>
+                                                    <td>Rs @Model.TotalAmount</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Discount : </td>
-                                                    <td>-Rs 70.00</td>
+                                                    <td>Rs @Model.Discount</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Shipping Charge :</td>
-                                                    <td>Rs 2500</td>
+                                                    <td>Rs @Model.ShippingCharge</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Estimated Tax : </td>
-                                                    <td>Rs 245.00</td>
+                                                    <td>Rs @Model.EstimatedTax</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Total :</th>
-                                                    <th>Rs 1900</th>
+                                                    <th>Rs @Model.GrandTotal</th>
                                                 </tr>
                                                 </tbody>
                                             </table>

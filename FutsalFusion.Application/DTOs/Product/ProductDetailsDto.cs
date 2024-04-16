@@ -2,9 +2,11 @@
 
 public class ProductDetailsDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     
     public string Name { get; set; }
+    
+    public string ImageUrl { get; set; }
     
     public string Date { get; set; }
     
@@ -19,6 +21,8 @@ public class ProductDetailsDto
     public int NumberOfOrders { get; set; }
     
     public string Revenue { get; set; }
+    
+    public int Count { get; set; }
     
     public bool IsDiscountAvailable { get; set; }
 }

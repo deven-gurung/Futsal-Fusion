@@ -2,6 +2,8 @@
 
 public class CartRequestDto
 {
+    public decimal TotalAmount { get; set; }
+
     public decimal GrandTotal { get; set; }
     
     public decimal Discount { get; set; }
@@ -15,7 +17,11 @@ public class CartRequestDto
 
 public class CartProducts
 {
-    public int Id { get; set; }
+    public Guid CartId { get; set; }
+    
+    public Guid Id { get; set; }
+    
+    public string ImageUrl { get; set; }
     
     public string Title { get; set; }
     
