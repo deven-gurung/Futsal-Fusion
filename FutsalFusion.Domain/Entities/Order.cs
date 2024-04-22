@@ -11,9 +11,9 @@ public class Order : BaseEntity<Guid>
     
     public decimal OrderTotal { get; set; }
     
-    public int OrderStatus { get; set; }
+    public int OrderStatus { get; set; }                    // Order Placed, Packed, Delivered
     
-    public int PaymentStatus { get; set; }
+    public int PaymentStatus { get; set; }                  // Paid, Unpaid
 
     public DateTime OrderedDate { get; set; }
 

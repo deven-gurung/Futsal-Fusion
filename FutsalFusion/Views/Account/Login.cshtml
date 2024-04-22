@@ -68,6 +68,11 @@
 </body>
 
 <script type="text/javascript">
+    $(document).ready(function (){
+        $('#Username').val('');
+        $('#Password').val('');
+    });
+    
     document.addEventListener("DOMContentLoaded", function () {
         let loginButton = document.getElementById('login');
         loginButton.addEventListener('click', function (event) {
@@ -109,4 +114,5 @@
         });
         
     });
+
 </script>

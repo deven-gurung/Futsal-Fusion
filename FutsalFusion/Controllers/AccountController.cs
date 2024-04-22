@@ -138,7 +138,7 @@ public class AccountController : Controller
         register.Username = Password.DecryptStringAES(register.HiddenUsername);
         register.Password = Password.DecryptStringAES(register.HiddenPassword).Replace(register.HiddenChangePassword, "");
         
-        var user = _genericRepository.GetFirstOrDefault<AppUser>(x => x.UserName == register.Username && x.EmailAddress == register.EmailAddress);
+        var user = _genericRepository.GetFirstOrDefault<AppUser>(x => x.UserName == register.Username || x.EmailAddress == register.EmailAddress);
 
         if (user == null)
         {
@@ -322,6 +322,30 @@ public class AccountController : Controller
         return View(result);
     }
 
+    [HttpGet]
+    public IActionResult PlayersList()
+    {
+        var appointmentDetails = _genericRepository.Get<AppointmentDetail>();
+
+        var userIds = appointmentDetails.Select(x => x.PlayerId).Distinct();
+
+        var users = _genericRepository.Get<AppUser>(x => userIds.Contains(x.Id));
+        
+        var result = users.Select(x => new UserResponseDto()
+        {
+            Id = x.Id,
+            FullName = x.FullName,
+            Username = x.UserName,
+            ImageURL = x.ImageURL ?? "sample-profile.png",
+            EmailAddress = x.EmailAddress,
+            IsActive = x.IsActive,
+            RoleName = _genericRepository.GetById<AppRole>(x.RoleId).Name,
+            RegisteredDate = x.CreatedAt.ToString("dd-MM-yyyy")
+        }).ToList();
+
+        return View(result);
+    }
+    
     [HttpGet]
     public IActionResult RoleRights()
     {

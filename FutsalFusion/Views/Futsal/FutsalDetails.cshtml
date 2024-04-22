@@ -35,86 +35,121 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card d-block">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h3 class="mt-0">@Model.FutsalName</h3>
-                                <div class="dropdown">
-                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="ri-more-fill"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a asp-action="ActivationStatus" asp-route-futsalId="@Model.FutsalId" class="dropdown-item">
-                                            @if (Model.IsActive)
-                                            {
-                                                <i class="mdi mdi-delete me-1"></i><span>Deactivate</span>
-                                            }
-                                            else
-                                            {
-                                                <i class="mdi mdi-backup-restore me-1"></i><span>Activate</span>
-                                            }
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            @if (Model.IsExotic)
-                            {
-                                <div class="badge bg-secondary text-light mb-3">Exotic</div>
-                            }
-                            @if (Model.IsNew)
-                            {
-                                <div class="badge bg-primary text-light mb-3">New</div>
-                            }
-                            @if (Model.IsPopular)
-                            {
-                                <div class="badge bg-danger text-light mb-3">Popular</div>
-                            }
-                            @if (Model.IsActive)
-                            {
-                                <div class="badge bg-success text-light mb-3">Active</div>
-                            }
-                            else
-                            {
-                                <div class="badge bg-danger text-light mb-3">Inactive</div>
-                            }
-                            
-
-                            <h5>@Model.FutsalPhrase</h5>
-                            <h6>
-                                <p class="fst-italic">@Model.FutsalLocationAddress</p>
-                            </h6>
-                            <p class="text-muted mb-2">
-                                @Html.Raw(Model.FutsalOverview)
-                            </p>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-4">
-                                        <h5>Initiated Date Date</h5>
-                                        <p>@Model.InitiatedDate</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-4">
-                                        <h5>Total Earnings</h5>
-                                        <p>Rs @Model.TotalEarnings</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-4">
-                                        <div id="tooltip-container">
-                                            <h5>Meet the Personnel</h5>
-                                            <a href="javascript:void(0);" data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="top" title="@Model.OwnerName" class="d-inline-block">
-                                                <img src="~/user-images/@Model.OwnerImageUrl" class="rounded-circle img-thumbnail avatar-sm" alt="friend">
+                    <div class="row">
+                        <div class="col-7">
+                            <div class="card d-block">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h3 class="mt-0">@Model.FutsalName</h3>
+                                        <div class="dropdown">
+                                            <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ri-more-fill"></i>
                                             </a>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                <a asp-action="ActivationStatus" asp-route-futsalId="@Model.FutsalId" class="dropdown-item">
+                                                    @if (Model.IsActive)
+                                                    {
+                                                        <i class="mdi mdi-delete me-1"></i>
+                                                        <span>Deactivate</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="mdi mdi-backup-restore me-1"></i>
+                                                        <span>Activate</span>
+                                                    }
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (Model.IsExotic)
+                                    {
+                                        <div class="badge bg-secondary text-light mb-3">Exotic</div>
+                                    }
+                                    @if (Model.IsNew)
+                                    {
+                                        <div class="badge bg-primary text-light mb-3">New</div>
+                                    }
+                                    @if (Model.IsPopular)
+                                    {
+                                        <div class="badge bg-danger text-light mb-3">Popular</div>
+                                    }
+                                    @if (Model.IsActive)
+                                    {
+                                        <div class="badge bg-success text-light mb-3">Active</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="badge bg-danger text-light mb-3">Inactive</div>
+                                    }
+
+
+                                    <h5>@Model.FutsalPhrase</h5>
+                                    <h6>
+                                        <p class="fst-italic">@Model.FutsalLocationAddress</p>
+                                    </h6>
+                                    <p class="text-muted mb-2">
+                                        @Html.Raw(Model.FutsalOverview)
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="mb-4">
+                                                <h5>Initiated Date Date</h5>
+                                                <p>@Model.InitiatedDate</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-4">
+                                                <h5>Total Earnings</h5>
+                                                <p>Rs @Model.TotalEarnings</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-4">
+                                                <div id="tooltip-container">
+                                                    <h5>Meet the Personnel</h5>
+                                                    <a href="javascript:void(0);" data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="top" title="@Model.OwnerName" class="d-inline-block">
+                                                        <img src="~/user-images/@Model.OwnerImageUrl" class="rounded-circle img-thumbnail avatar-sm" alt="friend">
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-5">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">Courts</h5>
+                                    @foreach (var court in Model.Courts)
+                                    {
+                                        <div class="card mb-1 shadow-none border">
+                                            <div class="p-2">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        <img src="~/court-images/@court.Images.FirstOrDefault()" class="avatar-sm rounded" alt="file-image"/>
+                                                    </div>
+                                                    <div class="col ps-0">
+                                                        <a href="javascript:void(0);" class="text-muted fw-bold">@court.Title</a>, <span class="text-title">@court.Type</span>
+                                                        <p class="mb-0">@court.Description</p>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <a asp-action="CourtDetails" asp-route-futsalCourtId="@court.Id" class="btn btn-link btn-lg text-muted">
+                                                            <i class="ri-login-circle-line"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                                
+                        </div>
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mt-0 mb-3">Comments (5)</h4>
+                            <h4 class="mt-0 mb-3">Comments (2)</h4>
                             <textarea class="form-control form-control-light mb-2" placeholder="Write message" id="example-textarea" rows="3"></textarea>
                             <div class="text-end">
                                 <div class="btn-group mb-2">
@@ -159,32 +194,6 @@
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title mb-3">Courts</h5>
-                            @foreach (var court in Model.Courts)
-                            {
-                                <div class="card mb-1 shadow-none border">
-                                    <div class="p-2">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <img src="~/court-images/@court.Images.FirstOrDefault()" class="avatar-sm rounded" alt="file-image" />
-                                            </div>
-                                            <div class="col ps-0">
-                                                <a href="javascript:void(0);" class="text-muted fw-bold">@court.Title</a>, <span class="text-title">@court.Type</span>
-                                                <p class="mb-0">@court.Description</p>
-                                            </div>
-                                            <div class="col-auto">
-                                                <a asp-action="CourtDetails" asp-route-futsalCourtId="@court.Id" class="btn btn-link btn-lg text-muted">
-                                                    <i class="ri-download-2-line"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
                             <div class="row">
                                 <div class="col mt-2">
                                     <h5 class="card-title mb-3">Working Days</h5>
@@ -200,8 +209,8 @@
                     </div>
                 </div>
             </div>
-        </div> 
-    </div> 
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -220,13 +229,13 @@
         colors: ["#727cf5"], 
         series: [{
             name: "Bookings",
-            data: ['110', '200', '150', '195']
+            data: ['110', '200', '150', '195', '200', '220', '190']
         }],
         legend: {
             offsetY: 5
         },
         xaxis: {
-            categories: ['Mon', 'Tue', 'Wed', 'Thu'],
+            categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             title: {
                 text: 'Days' 
             }

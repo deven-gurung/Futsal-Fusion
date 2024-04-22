@@ -41,7 +41,7 @@ public class AppointmentsController : BaseController<AppointmentsController>
             IsActionCompleted = x.IsActionComplete,
             TimeSlot = $"{x.TimeSlotStartTime} - {x.TimeSlotEndTime}",
             AppointedDate = x.AppointedDate.ToString("dd-MM-yyyy"),
-            BookedDate = x.BookedDate.ToString("dd-MM-yyyy"),
+            BookedDate = x.BookedDate.ToString("dd-MM-yyyy HH:mm:ss tt"),
             PaymentStatus = x.IsPaid ? "Paid" : "Not Paid"
         }).ToList();
 

@@ -1,6 +1,7 @@
 ﻿using FutsalFusion.Application.DTOs.Order;
 using FutsalFusion.Application.Interfaces.Repositories.Base;
 using FutsalFusion.Controllers.Base;
+using FutsalFusion.Domain.Constants;
 using FutsalFusion.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,5 +61,73 @@ public class CartController : BaseController<CartController>
         TempData["Success"] = "Product & Kit Successfully Deleted from Cart";
 
         return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public IActionResult PlaceOrder(string? description)
+    {
+        var userId = UserDetail.UserId;
+
+        var user = _genericRepository.GetById<AppUser>(userId);
+
+        var shoppingCartProducts = _genericRepository.Get<Cart>(x => x.UserId == user.Id);
+
+        var cartEntityList = shoppingCartProducts as Cart[] ?? shoppingCartProducts.ToArray();
+
+        var kitId = cartEntityList.FirstOrDefault()!.KitId;
+
+        var kit = _genericRepository.GetById<Kit>(kitId);
+
+        var futsal = _genericRepository.GetById<Futsal>(kit.FutsalId);
+
+        var futsalOwner = _genericRepository.GetById<AppUser>(futsal.FutsalOwnerId);
+        
+        var orderDetails = cartEntityList.Select(shoppingCartProduct => new OrderDetail()
+            {
+                KitId = shoppingCartProduct.KitId,
+                Quantity = shoppingCartProduct.Count,
+                KitTotalAmount = _genericRepository.GetById<Kit>(shoppingCartProduct.KitId).Price * shoppingCartProduct.Count,
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                CreatedBy = user.Id,
+            })
+            .ToList();
+        
+        var orderTotal = new Order()
+        {
+            Description = description ?? "Kit Requested for Play Arrangements.",
+            OrderStatus = 1,
+            PaymentStatus = 1,
+            PaymentDate = null,
+            CreatedAt = DateTime.Now,
+            CreatedBy = user.Id,
+            OrderedDate = DateTime.Now,
+            UserId = user.Id,
+            OrderTotal = orderDetails.Sum(x => x.KitTotalAmount),
+            OrderDetails = orderDetails,
+        };
+
+        var orderId = _genericRepository.Insert(orderTotal);
+
+        TempData["Success"] = "Kits Successfully Ordered";
+
+        _genericRepository.RemoveMultipleEntity(cartEntityList);
+
+        var notification = new Notification()
+        {
+            CreatedAt = DateTime.Now,
+            CreatedBy = user.Id,
+            IsActive = true,
+            Title = "A new order has been placed",
+            Content = $"A new order with the identifier {orderId.ToString()[..8]} has been placed at your futsal.",
+            SenderId = user.Id,
+            ReceiverId = futsalOwner.Id,
+            ReceiverEntity = (int)Roles.Futsal,
+            SenderEntity = (int)Roles.Player,
+        };
+
+        _genericRepository.Insert(notification);
+        
+        return RedirectToAction("Index", "Product");
     }
 }

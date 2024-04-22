@@ -67,23 +67,29 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="mt-3">
-                                        <label for="example-textarea" class="form-label">Add a Note:</label>
-                                        <textarea class="form-control" id="example-textarea" rows="3"
-                                            placeholder="Write some note.."></textarea>
-                                    </div>
-                                    <div class="row mt-4">
-                                        <div class="col-sm-6">
-                                            <a class="btn text-muted d-none d-sm-inline-block btn-link fw-semibold" asp-controller="Product" asp-action="Index">
-                                                <i class="mdi mdi-arrow-left"></i> Continue Shopping </a>
+                                    <form asp-action="PlaceOrder" asp-controller="Cart" method="post">
+                                        <div class="mt-3">
+                                            <label for="example-textarea" class="form-label">Add a Note:</label>
+                                            <textarea class="form-control" id="example-textarea" rows="3" name="description"
+                                                placeholder="Write some note.."></textarea>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <div class="text-sm-end">
-                                                <a class="btn btn-danger">
-                                                    <i class="mdi mdi-cart-plus me-1"></i> Checkout </a>
+                                        <div class="row mt-4">
+                                            <div class="col-sm-6">
+                                                <a class="btn text-muted d-none d-sm-inline-block btn-link fw-semibold" asp-controller="Product" asp-action="Index">
+                                                    <i class="mdi mdi-arrow-left"></i> Continue Shopping </a>
                                             </div>
+                                            @if (Model.CartProductsList.Any())
+                                            {
+                                                <div class="col-sm-6">
+                                                    <div class="text-sm-end">
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="mdi mdi-cart-plus me-1"></i> Checkout 
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            }
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="border p-3 mt-4 mt-lg-0 rounded">

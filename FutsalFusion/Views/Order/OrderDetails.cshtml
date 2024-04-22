@@ -1,0 +1,161 @@
+﻿@model FutsalFusion.Application.DTOs.Order.OrderResponseDto
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Fusion</a></li>
+                                <li class="breadcrumb-item">Orders</li>
+                                <li class="breadcrumb-item active">Order Details</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Order Details</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @if (Model.OrderStatus != 4)
+                {
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7 col-md-10 col-sm-11">
+                            <div class="horizontal-steps mt-4 mb-4 pb-5" id="tooltip-container">
+                                @if (Model.OrderStatus == 1)
+                                {
+                                    <div class="horizontal-steps-content">
+                                        <div class="step-item current">
+                                            <span data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="bottom" title="@Model.OrderedDate">Order Placed</span>
+                                        </div>
+                                        <div class="step-item">
+                                            <span data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="bottom">Packed</span>
+                                        </div>
+                                        <div class="step-item">
+                                            <span>Delivered</span>
+                                        </div>
+                                    </div>
+                                }
+                                else if (Model.OrderStatus == 2)
+                                {
+                                    <div class="horizontal-steps-content">
+                                        <div class="step-item">
+                                            <span data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="bottom" title="@Model.OrderedDate">Order Placed</span>
+                                        </div>
+                                        <div class="step-item current">
+                                            <span data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="bottom">Packed</span>
+                                        </div>
+                                        <div class="step-item">
+                                            <span>Delivered</span>
+                                        </div>
+                                    </div>
+                                }
+                                else if (Model.OrderStatus == 3)
+                                {
+                                    <div class="horizontal-steps-content">
+                                        <div class="step-item">
+                                            <span data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="bottom" title="@Model.OrderedDate">Order Placed</span>
+                                        </div>
+                                        <div class="step-item">
+                                            <span data-bs-container="#tooltip-container" data-bs-toggle="tooltip" data-bs-placement="bottom">Packed</span>
+                                        </div>
+                                        <div class="step-item current">
+                                            <span>Delivered</span>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="process-line" style="width: 33%;"></div>
+                            </div>
+                        </div>
+                    </div>   
+                }
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">Items from Order #@Model.Id</h4>
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach (var item in Model.ProductsList)
+                                        {
+                                            <tr>
+                                                <td>@item.Title</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.UnitPrice</td>
+                                                <td>@item.TotalAmount</td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title mb-3">Order Summary</h4>
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Price</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Grand Total :</td>
+                                            <td>Rs @Model.TotalAmount</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shipping Charge :</td>
+                                            <td>Rs 500</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Estimated Tax : </td>
+                                            <td>Rs @Model.EstimatedTax</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total :</th>
+                                            <th>Rs @Model.GrandTotal</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                @if (Model is { IsEditable: true, OrderStatus: <= 3 } )
+                {
+                    <div class="row">
+                        <div class="col-12 text-end">
+                            <a asp-action="CancelOrderDetailsStatus" asp-route-orderId="@Model.OrderId" class="btn btn-danger">
+                                <i class="mdi mdi-bell-cancel me-1"></i> Cancel
+                            </a>
+                            <a asp-action="UpdateOrderDetailsStatus" asp-route-orderId="@Model.OrderId" class="btn btn-success">
+                                <i class="ri-calendar-check-fill me-1"></i> Proceed
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

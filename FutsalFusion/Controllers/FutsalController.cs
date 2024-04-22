@@ -768,7 +768,7 @@ public class FutsalController : BaseController<FutsalController>
                     {
                         var appointment = appointments.FirstOrDefault(x =>
                             x.AppointedDate.Date == dateOfTheWeek.Date && (int)x.TimeSlotStartTime.TotalHours == index &&
-                            (int)x.TimeSlotEndTime.TotalHours == index + 1);
+                            (int)x.TimeSlotEndTime.TotalHours == index + 1 && x.IsActive);
 
                         var status = appointment switch
                         {

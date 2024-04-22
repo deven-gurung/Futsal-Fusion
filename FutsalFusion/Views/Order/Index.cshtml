@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<FutsalFusion.Application.DTOs.Order.OrderDetailsDto>
+
+@{
     ViewData["Title"] = "Orders";
 }
 
@@ -66,96 +68,53 @@
                                             <th>Date</th>
                                             <th>Payment Status</th>
                                             <th>Total</th>
-                                            <th>Payment Method</th>
                                             <th>Order Status</th>
                                             <th style="width: 125px;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="customCheck2">
-                                                    <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td><a class="text-body fw-bold">#BM9708</a> </td>
-                                            <td>
-                                                August 05 2024 <small class="text-muted">10:29 PM</small>
-                                            </td>
-                                            <td>
-                                                <h5><span class="badge badge-success-lighten"><i class="mdi mdi-bitcoin"></i> Paid</span></h5>
-                                            </td>
-                                            <td>
-                                                Rs 1700
-                                            </td>
-                                            <td>
-                                                Mastercard
-                                            </td>
-                                            <td>
-                                                <h5><span class="badge badge-info-lighten">Shipped</span></h5>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                            </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="customCheck3">
-                                                    <label class="form-check-label" for="customCheck3">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td><a class="text-body fw-bold">#BM9707</a> </td>
-                                            <td>August 04 2024 <small class="text-muted">08:18 AM</small></td>
-                                            <td>
-                                                <h5><span class="badge badge-warning-lighten"><i class="mdi mdi-timer-sand"></i> Awaiting Authorization</span></h5>
-                                            </td>
-                                            <td>
-                                                Rs 1,450.00
-                                            </td>
-                                            <td>
-                                                Visa
-                                            </td>
-                                            <td>
-                                                <h5><span class="badge badge-warning-lighten">Processing</span></h5>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="customCheck4">
-                                                    <label class="form-check-label" for="customCheck4">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td><a class="text-body fw-bold">#BM9706</a> </td>
-                                            <td>August 04 2024 <small class="text-muted">10:29 PM</small></td>
-                                            <td>
-                                                <h5><span class="badge badge-success-lighten"><i class="mdi mdi-bitcoin"></i> Paid</span></h5>
-                                            </td>
-                                            <td>
-                                                Rs 801.99
-                                            </td>
-                                            <td>
-                                                Credit Card
-                                            </td>
-                                            <td>
-                                                <h5><span class="badge badge-warning-lighten">Processing</span></h5>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                            </td>
-                                        </tr>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="customCheck2">
+                                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                                    </div>
+                                                </td>
+                                                <td><a class="text-body fw-bold">#@item.Id</a> </td>
+                                                <td>
+                                                    @item.OrderedDate <small class="text-muted">@item.OrderedTime</small>
+                                                </td>
+                                                <td>
+                                                    <h5><span class="badge badge-warning-lighten"><i class="mdi mdi-timer-sand"></i> Awaiting Authorization</span></h5>
+                                                </td>
+                                                <td>
+                                                    @item.OrderTotal
+                                                </td>
+                                                <td>
+                                                    @if (item.OrderStatus == 1)
+                                                    {
+                                                        <h5><span class="badge badge-warning-lighten">Processing</span></h5>
+                                                    }
+                                                    else if (item.OrderStatus == 2)
+                                                    {
+                                                        <h5><span class="badge badge-info-lighten">Packed</span></h5>
+                                                    }
+                                                    else if (item.OrderStatus == 3)
+                                                    {
+                                                        <h5><span class="badge badge-success-lighten">Delivered</span></h5>
+                                                    }
+                                                    else
+                                                    {
+                                                        <h5><span class="badge badge-danger-lighten">Cancelled</span></h5>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <a asp-action="OrderDetails" asp-route-orderId="@item.OrderId" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>

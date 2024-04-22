@@ -30,7 +30,7 @@
                                     <div class="col-sm-5">
                                         @if (Model.IsEditable)
                                         {
-                                            <a href="javascript:void(0);" class="btn btn-danger mb-2">
+                                            <a asp-action="Create" asp-controller="Product" class="btn btn-danger mb-2">
                                                 <i class="mdi mdi-plus-circle me-2"></i> Add Products
                                             </a>
                                         }
@@ -53,7 +53,7 @@
                                                         <label class="form-check-label" for="customCheck1">&nbsp;</label>
                                                     </div>
                                                 </th>
-                                                <th class="all">Product</th>
+                                                <th class="all" colspan="2">Product</th>
                                                 <th>Category</th>
                                                 <th>Added Date</th>
                                                 <th>Price</th>
@@ -71,8 +71,10 @@
                                                         <label class="form-check-label" for="customCheck2">&nbsp;</label>
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td style="width: 15px">
                                                     <img src="~/kit-images/@item.ImageURL" alt="contact-img" title="contact-img" class="rounded me-3" height="48"/>
+                                                </td>
+                                                <td>
                                                     <p class="m-0 d-inline-block align-middle font-16">
                                                         <a asp-action="Detail" asp-route-productId="@item.Id" class="text-body">@item.Title</a>
                                                         <br/>

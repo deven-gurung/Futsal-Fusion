@@ -1,0 +1,118 @@
+﻿@model FutsalFusion.Application.DTOs.Product.ProductRequestDto
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Futsal Fusion</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Products</a></li>
+                                <li class="breadcrumb-item active">Create</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Create a New Product</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="mb-3 mt-3 mt-xl-0">
+                                <label class="mb-0">Images</label>
+                                <p class="text-muted font-14">Recommended thumbnail size 800x400 (px).</p>
+                                <form asp-action="Upload" method="post" class="dropzone" id="myAwesomeDropzone" data-plugin="dropzone" data-previews-container="#file-previews"
+                                      data-upload-preview-template="#uploadPreviewTemplate" enctype="multipart/form-data">
+                                    <div class="fallback">
+                                        <input name="imageFile" type="file"/>
+                                    </div>
+                                    <div class="dz-message needsclick">
+                                        <i class="h3 text-muted ri-upload-cloud-2-line"></i>
+                                        <h4>Drop files here or click to upload.</h4>
+                                    </div>
+                                </form>
+                                <div class="dropzone-previews mt-3" id="file-previews"></div>
+                                <div class="d-none" id="uploadPreviewTemplate">
+                                    <div class="card mt-1 mb-0 shadow-none border">
+                                        <div class="p-2">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">
+                                                </div>
+                                                <div class="col ps-0">
+                                                    <a href="javascript:void(0);" class="text-muted fw-bold" data-dz-name></a>
+                                                    <p class="mb-0" data-dz-size></p>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                                                        <i class="ri-close-line"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form data-ajax="true" data-ajax-method="post" asp-action="Create" enctype="multipart/form-data" class="needs-validation" novalidate data-ajax-success="onSuccess">
+                        <div class="card">
+                            <div class="card-body">
+                                @Html.AntiForgeryToken()
+                                <div class="row">
+                                    <div class="col-xl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Product Title</label>
+                                            <input type="text" class="form-control" placeholder="Enter the name of the product" asp-for="Title" autocomplete="off" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Price</label>
+                                            <input type="text" class="form-control" placeholder="Enter the price of the product" asp-for="Price" autocomplete="off" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-control" id="project-overview" rows="5" placeholder="Enter some brief about product..." autocomplete="off" asp-for="Description"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Unit</label>
+                                            <select asp-for="Unit" class="form-control" required>
+                                                <option selected="" disabled="">Select a Unit</option>
+                                                <option value="1" label="Piece">Piece</option>
+                                                <option value="2" label="Collection">Collection</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Type</label>
+                                            <select asp-for="Type" class="form-control" required>
+                                                <option selected="" disabled="">Select a Type</option>
+                                                <option value="1" label="Boots">Boots</option>
+                                                <option value="2" label="Kits / Accessories">Kits / Accessories</option>
+                                                <option value="3" label="Jerseys">Jerseys</option>
+                                                <option value="4" label="Miscellaneous">Miscellaneous</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" name="button" value="register" class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top"
+                                        data-bs-custom-class="success-tooltip" data-bs-title="Click here, to submit your request">
+                                    Create
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+        </div>
+    </div> 
+</div>
