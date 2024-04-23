@@ -30,6 +30,14 @@
                                     <a href="javascript: void(0);" class="text-center d-block mb-4">
                                         <img src="~/kit-images/@Model.ImageUrl" class="img-fluid" style="max-width: 280px;" alt="Product-img" />
                                     </a>
+                                    <div class="d-lg-flex d-none justify-content-center">
+                                        @foreach (var item in Model.Images)
+                                        {
+                                            <a href="javascript: void(0);">
+                                                <img src="~/kit-images/@item" class="img-fluid img-thumbnail p-2 m-2" style="max-width: 125px;" alt="Product-img"/>
+                                            </a>
+                                        }
+                                    </div>
                                 </div> 
                                 <div class="col-lg-7">
                                     <h3 class="mt-0">@Model.Name <a href="javascript: void(0);" class="text-muted"><i class="mdi mdi-square-edit-outline ms-2"></i></a> </h3>

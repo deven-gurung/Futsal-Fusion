@@ -28,6 +28,8 @@ public class FutsalController : BaseController<FutsalController>
     [HttpGet]
     public IActionResult Index(string? type = null)
     {
+        TempData["Success"] = "Futsal Successfully Registered";
+        
         var futsalDetailsList = (from futsal in _genericRepository.Get<Futsal>()
                 let owner = _genericRepository.GetById<AppUser>(futsal.FutsalOwnerId)
                 let futsalImages = _genericRepository.GetFirstOrDefault<FutsalImage>(x => x.FutsalId == futsal.Id)
@@ -166,8 +168,8 @@ public class FutsalController : BaseController<FutsalController>
                 var priceForMorning = new CourtPrice()
                 {
                     CourtId = court.Id,
-                    TimeTo = new TimeSpan(6, 0, 0),
-                    TimeFrom = new TimeSpan(14, 0, 0),
+                    TimeTo = new TimeSpan(14, 0, 0),
+                    TimeFrom = new TimeSpan(6, 0, 0),
                     IsDeleted = false,
                     IsActive = true,
                     CreatedBy = UserDetail.UserId,
@@ -178,8 +180,8 @@ public class FutsalController : BaseController<FutsalController>
                 var priceForDay = new CourtPrice()
                 {
                     CourtId = court.Id,
-                    TimeTo = new TimeSpan(15, 0, 0),
-                    TimeFrom = new TimeSpan(20, 0, 0),
+                    TimeTo = new TimeSpan(20, 0, 0),
+                    TimeFrom = new TimeSpan(15, 0, 0),
                     IsDeleted = false,
                     IsActive = true,
                     CreatedBy = UserDetail.UserId,
@@ -190,8 +192,8 @@ public class FutsalController : BaseController<FutsalController>
                 var priceForEvening = new CourtPrice()
                 {
                     CourtId = court.Id,
-                    TimeTo = new TimeSpan(21, 0, 0),
-                    TimeFrom = new TimeSpan(22, 0, 0),
+                    TimeTo = new TimeSpan(22, 0, 0),
+                    TimeFrom = new TimeSpan(21, 0, 0),
                     IsDeleted = false,
                     IsActive = true,
                     CreatedBy = UserDetail.UserId,

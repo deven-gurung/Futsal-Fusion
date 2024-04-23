@@ -8,6 +8,8 @@ public class ProductDetailsDto
     
     public string ImageUrl { get; set; }
     
+    public List<string> Images { get; set; }
+    
     public string Date { get; set; }
     
     public string RetailPrice { get; set; }

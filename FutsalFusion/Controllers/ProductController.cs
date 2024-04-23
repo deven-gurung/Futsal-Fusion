@@ -138,6 +138,7 @@ public class ProductController : BaseController<ProductController>
             Name = product.Title,
             Description = product.Description,
             ImageUrl = product.ImageURL.Split(",").FirstOrDefault() ?? "sample-profile.png",
+            Images = product.ImageURL.Split(",").ToList(),
             Date = product.CreatedAt.ToString("dd-MM-yyyy"),
             Revenue = $"Rs {orderDetails.Sum(x => x.KitTotalAmount)}",
             AvailableStock = new Random().Next(1, 100),
