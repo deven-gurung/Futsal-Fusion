@@ -24,23 +24,23 @@ public class CartController : BaseController<CartController>
 
         var kitsInShoppingCart = _genericRepository.Get<Cart>(x => x.UserId == user.Id);
 
-        var products = _genericRepository.Get<Kit>(x => kitsInShoppingCart.Select(z => z.KitId).Contains(x.Id));
-
-        var productDetails = products as Kit[] ?? products.ToArray();
+        var inShoppingCart = kitsInShoppingCart as Cart[] ?? kitsInShoppingCart.ToArray();
         
+        var totalAmount = (from cart in inShoppingCart let product = _genericRepository.GetById<Kit>(cart.KitId) select product.Price * cart.Count).Sum();
+
         var result = new CartRequestDto()
         {
             Discount = 0,
-            TotalAmount = productDetails.Sum(x => x.Price),
-            EstimatedTax = productDetails.Sum(x => x.Price) * (decimal)0.13d,
+            TotalAmount = totalAmount,
+            EstimatedTax = totalAmount * (decimal)0.13d,
             ShippingCharge = 500,
-            GrandTotal = 500m + productDetails.Sum(x => x.Price) * 0.13m + productDetails.Sum(x => x.Price),
-            CartProductsList = kitsInShoppingCart.Select(x => new CartProducts()
+            GrandTotal = 500m + totalAmount * 0.13m + totalAmount,
+            CartProductsList = inShoppingCart.Select(x => new CartProducts()
             {   
                 Id = x.KitId,
                 CartId = x.Id,
-                ImageUrl = _genericRepository.GetById<Kit>(x.KitId).ImageURL,
-                Price = $"Rs {_genericRepository.GetById<Kit>(x.KitId).Price}",
+                ImageUrl = _genericRepository.GetById<Kit>(x.KitId).ImageURL.Split(",").FirstOrDefault()!,
+                Price = $"Rs {_genericRepository.GetById<Kit>(x.KitId).Price * x.Count}",
                 Quantity = x.Count,
                 Title = _genericRepository.GetById<Kit>(x.KitId).Title,
                 AddedDate = x.CreatedAt.ToString("dd-MM-yyyy"),

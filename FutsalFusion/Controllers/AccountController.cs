@@ -12,6 +12,7 @@ using FutsalFusion.Application.Interfaces.Services;
 using FutsalFusion.Attribute;
 using FutsalFusion.Domain.Constants;
 using FutsalFusion.Domain.Entities;
+using FutsalFusion.Domain.Helper;
 using FutsalFusion.Domain.Utilities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
@@ -118,6 +119,8 @@ public class AccountController : Controller
     public IActionResult Logout()
     {
         HttpContext.Session.Clear();
+
+        TempData["Success"] = "User Successfully Logged Out";
         
         return RedirectToAction("Login");
     }
@@ -137,6 +140,16 @@ public class AccountController : Controller
         register.Image = HttpContext.Request.Form.Files.FirstOrDefault();
         register.Username = Password.DecryptStringAES(register.HiddenUsername);
         register.Password = Password.DecryptStringAES(register.HiddenPassword).Replace(register.HiddenChangePassword, "");
+
+        if (register.Image != null)
+        {
+            if (!ValidateFileMimeType(register.Image))
+            {
+                TempData["Warning"] = $"The file format of the {register.Image.FileName} file is incorrect.";
+                
+                return View();
+            }
+        }
         
         var user = _genericRepository.GetFirstOrDefault<AppUser>(x => x.UserName == register.Username || x.EmailAddress == register.EmailAddress);
 
@@ -662,5 +675,21 @@ public class AccountController : Controller
         {
             data = captcha
         });
+    }
+
+    private static bool ValidateFileMimeType(IFormFile file)
+    {
+        var mimeType = string.Empty;
+        
+        var fileExtension = Path.GetExtension(file.FileName);
+        
+        using (var stream = file.OpenReadStream())
+        {
+            mimeType = FileHelper.GetMimeType(stream);
+        }
+
+        var disMType = FileHelper.GetFileMimeType(fileExtension);
+        
+        return mimeType == disMType;
     }
 }

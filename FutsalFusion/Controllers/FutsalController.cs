@@ -28,8 +28,6 @@ public class FutsalController : BaseController<FutsalController>
     [HttpGet]
     public IActionResult Index(string? type = null)
     {
-        TempData["Success"] = "Futsal Successfully Registered";
-        
         var futsalDetailsList = (from futsal in _genericRepository.Get<Futsal>()
                 let owner = _genericRepository.GetById<AppUser>(futsal.FutsalOwnerId)
                 let futsalImages = _genericRepository.GetFirstOrDefault<FutsalImage>(x => x.FutsalId == futsal.Id)

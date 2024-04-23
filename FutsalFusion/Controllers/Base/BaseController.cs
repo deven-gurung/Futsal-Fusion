@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using FutsalFusion.Application.DTOs.Account;
 using FutsalFusion.Attribute;
+using FutsalFusion.Domain.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
@@ -100,5 +101,21 @@ public class BaseController<T> : Controller where T : BaseController<T>
         var fileSizeInMb = file.Length / (1024.0 * 1024.0);
         
         return fileSizeInMb > 30 ? (false, fileSizeInMb) : (true, fileSizeInMb);
+    }
+    
+    protected static bool ValidateFileMimeType(IFormFile file)
+    {
+        var mimeType = string.Empty;
+        
+        var fileExtension = Path.GetExtension(file.FileName);
+        
+        using (var stream = file.OpenReadStream())
+        {
+            mimeType = FileHelper.GetMimeType(stream);
+        }
+
+        var disMType = FileHelper.GetFileMimeType(fileExtension);
+        
+        return mimeType == disMType;
     }
 }
